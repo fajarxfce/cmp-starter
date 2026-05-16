@@ -1,0 +1,13 @@
+Task 7 Navigation3 guard evidence
+Generated: 2026-05-16
+
+Equivalent production Kotlin scan for: AppStage|HomeSection|NavigationReducer|AppBackStack
+Roots: core composeApp feature shared
+Excluded: src/*Test Kotlin sources
+No matches found.
+
+Focused runtime navigation scan
+Roots: core/navigation/src/commonMain composeApp/src/commonMain
+No matches found.
+
+Result: PASS - no production Kotlin usages of AppStage, HomeSection, NavigationReducer, or AppBackStack were found as runtime navigation fallback.

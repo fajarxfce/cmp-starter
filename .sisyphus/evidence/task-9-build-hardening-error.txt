@@ -1,0 +1,16 @@
+Task 9 architecture guardrail scan
+Note: rg is unavailable in this environment; Python source scan used instead.
+
+[feature HttpClient imports]
+No matches found
+
+[production app stale navigation symbols]
+No matches found
+
+[obsolete in-memory api client]
+No matches found
+
+[hardcoded URL literals in Kotlin]
+composeApp/src/desktopTest/kotlin/com/fajar/kmp/di/KoinModuleVerificationTest.kt:52: override val baseUrl: String = "https://pos.example.test"
+core/network/src/commonMain/kotlin/com/fajar/kmp/core/network/KtorApiClient.kt:138: require(trimmed.startsWith("https://") || trimmed.startsWith("http://")) {
+core/network/src/commonTest/kotlin/com/fajar/kmp/core/network/KtorApiClientTest.kt:142: baseUrl: String = "https://pos.test",

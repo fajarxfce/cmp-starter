@@ -1,0 +1,53 @@
+Task 3 Koin Graph Replacement - Evidence Report
+================================================
+
+OBJECTIVE:
+Replace remaining manual TodoGraph with Koin module wiring.
+
+FILES MODIFIED:
+1. feature/todo/src/commonMain/kotlin/com/fajar/kmp/feature/todo/di/TodoModule.kt
+   - Removed: class TodoGraph with manual dependency construction
+   - Added: val todoModule = module { ... } with Koin DSL bindings
+   - Bindings: TodoLocalDataSource, TodoRemoteDataSource, NetworkMonitor, TodoSyncManager, TodoRepository, all use cases, TodoViewModel
+
+2. feature/todo/src/commonMain/kotlin/com/fajar/kmp/feature/todo/presentation/route/TodoRoute.kt
+   - Removed: graph: TodoGraph = remember { TodoGraph() } parameter
+   - Removed: val viewModel = remember { graph.viewModel() }
+   - Added: viewModel: TodoViewModel = koinInject() parameter
+   - Changed: Uses Koin Compose injection instead of manual graph
+
+3. composeApp/src/commonMain/kotlin/com/fajar/kmp/di/AppKoin.kt
+   - Added: import com.fajar.kmp.feature.todo.di.todoModule
+   - Added: todoModule to productionAppModules list
+
+4. composeApp/src/desktopTest/kotlin/com/fajar/kmp/di/KoinModuleVerificationTest.kt
+   - Added: import com.fajar.kmp.feature.todo.presentation.viewmodel.TodoViewModel
+   - Added: assertIs<TodoViewModel>(koin.get<TodoViewModel>()) verification
+
+5. feature/todo/build.gradle.kts
+   - Added: implementation(libs.koin.core)
+   - Added: implementation(libs.koin.compose)
+
+VERIFICATION:
+✓ grep -r "class TodoGraph|TodoGraph()|AuthGraph" returns no results
+✓ ./gradlew allTests passes with BUILD SUCCESSFUL
+✓ All Koin module definitions resolve correctly
+✓ TodoViewModel is properly injected via Koin in TodoRoute
+✓ Verification test confirms all dependencies resolve
+
+DEPENDENCY CHAIN VERIFIED:
+TodoViewModel
+  ├─ ObserveTodosUseCase → TodoRepository
+  ├─ AddTodoUseCase → TodoRepository
+  ├─ ToggleTodoUseCase → TodoRepository
+  ├─ DeleteTodoUseCase → TodoRepository
+  └─ SyncTodosUseCase → TodoRepository
+       └─ TodoRepositoryImpl
+            ├─ TodoLocalDataSource (InMemoryTodoLocalDataSource)
+            └─ TodoSyncManager
+                 ├─ TodoLocalDataSource
+                 ├─ TodoRemoteDataSource (FakeTodoRemoteDataSource)
+                 └─ NetworkMonitor (AlwaysOnlineNetworkMonitor)
+
+STATUS: COMPLETE
+All TodoGraph references removed. Todo feature fully wired via Koin module.

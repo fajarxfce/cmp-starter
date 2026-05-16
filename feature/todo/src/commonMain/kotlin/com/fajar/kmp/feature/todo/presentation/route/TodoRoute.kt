@@ -4,14 +4,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import com.fajar.kmp.feature.todo.di.TodoGraph
 import com.fajar.kmp.feature.todo.presentation.contract.TodoIntent
 import com.fajar.kmp.feature.todo.presentation.screen.TodoListScreen
+import org.koin.compose.koinInject
 
 @Composable
-fun TodoRoute(graph: TodoGraph = remember { TodoGraph() }) {
-    val viewModel = remember { graph.viewModel() }
+fun TodoRoute(viewModel: com.fajar.kmp.feature.todo.presentation.viewmodel.TodoViewModel = koinInject()) {
     val state by viewModel.state.collectAsState()
 
     LaunchedEffect(viewModel) {

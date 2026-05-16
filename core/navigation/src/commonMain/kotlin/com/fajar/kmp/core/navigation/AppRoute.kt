@@ -1,49 +1,110 @@
 package com.fajar.kmp.core.navigation
 
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.toImmutableList
+import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed interface AppRoute {
+sealed interface AppRoute : NavKey {
     @Serializable
-    data object TodoList : AppRoute
+    data object Splash : AppRoute
 
     @Serializable
-    data class TodoDetail(val id: String) : AppRoute
+    data object Onboarding : AppRoute
 
     @Serializable
-    data object AddTodo : AppRoute
+    data object Login : AppRoute
 
+    @Serializable
+    data object Register : AppRoute
+
+    @Serializable
+    data object StoreSetup : AppRoute
+
+    @Serializable
+    data object Dashboard : AppRoute
+
+    @Serializable
+    data object Catalog : AppRoute
+
+    @Serializable
+    data object Checkout : AppRoute
+
+    @Serializable
+    data object Sync : AppRoute
+
+    @Serializable
+    data object Admin : AppRoute
+
+    @Serializable
+    data class ProductDetail(val id: String) : AppRoute
 }
 
-data class AppBackStack(
-    val entries: ImmutableList<AppRoute> = persistentListOf(AppRoute.TodoList),
-)
+class AppNavigator(startRoute: AppRoute = AppRoute.Splash) {
+    private val routeStack = mutableListOf(startRoute)
 
-sealed interface NavigationAction {
-    data class Push(val route: AppRoute) : NavigationAction
-    data object Pop : NavigationAction
-    data class ReplaceAll(val route: AppRoute) : NavigationAction
-}
+    val backStack: List<AppRoute>
+        get() = routeStack.toList()
 
-class NavigationReducer {
-    fun reduce(backStack: AppBackStack, action: NavigationAction): AppBackStack = when (action) {
-        is NavigationAction.Push -> backStack.copy(entries = (backStack.entries + action.route).toImmutableList())
-        NavigationAction.Pop -> if (backStack.entries.size > 1) {
-            backStack.copy(entries = backStack.entries.dropLast(1).toImmutableList())
+    val currentRoute: AppRoute
+        get() = routeStack.last()
+
+    fun goToOnboarding() = replaceAll(AppRoute.Onboarding)
+
+    fun goToLogin() = replaceAll(AppRoute.Login)
+
+    fun goToRegister() = replaceAll(AppRoute.Register)
+
+    fun completeAuthentication(hasActiveStore: Boolean) = replaceAll(
+        if (hasActiveStore) AppRoute.Dashboard else AppRoute.StoreSetup,
+    )
+
+    fun completeStoreSetup() = replaceAll(AppRoute.Dashboard)
+
+    fun logout() = replaceAll(AppRoute.Login)
+
+    fun openHomeRoute(route: AppRoute) {
+        require(route.isHomeRoute) { "Route $route is not a home route" }
+        if (currentRoute == route) return
+        if (currentRoute == AppRoute.Dashboard) {
+            routeStack += route
         } else {
-            backStack
+            routeStack[routeStack.lastIndex] = route
         }
-        is NavigationAction.ReplaceAll -> AppBackStack(persistentListOf(action.route))
+    }
+
+    fun goBack(): Boolean {
+        if (routeStack.size == 1) return false
+        routeStack.removeAt(routeStack.lastIndex)
+        return true
+    }
+
+    fun replaceAll(route: AppRoute) {
+        routeStack.clear()
+        routeStack += route
     }
 }
 
-interface Navigator {
-    val backStack: AppBackStack
-    fun dispatch(action: NavigationAction)
-}
+val AppRoute.displayTitle: String
+    get() = when (this) {
+        AppRoute.Splash -> "Splash"
+        AppRoute.Onboarding -> "Onboarding"
+        AppRoute.Login -> "Login"
+        AppRoute.Register -> "Register"
+        AppRoute.StoreSetup -> "Store setup"
+        AppRoute.Dashboard -> "Dashboard"
+        AppRoute.Catalog -> "Catalog"
+        AppRoute.Checkout -> "Checkout"
+        AppRoute.Sync -> "Sync"
+        AppRoute.Admin -> "Admin"
+        is AppRoute.ProductDetail -> "Product detail"
+    }
+
+val AppRoute.isHomeRoute: Boolean
+    get() = this == AppRoute.Dashboard ||
+        this == AppRoute.Catalog ||
+        this == AppRoute.Checkout ||
+        this == AppRoute.Sync ||
+        this == AppRoute.Admin
 
 interface FeatureEntry {
     val route: AppRoute

@@ -60,7 +60,7 @@ class ComposeMultiplatformApplicationConventionPlugin : Plugin<Project> {
                     dimension = "environment"
                     applicationIdSuffix = ".dev"
                     resValue("string", "app_name", "CMP Starter Dev")
-                    buildConfigField("String", "BASE_URL", "\"https://dev.api.example.com\"")
+                    buildConfigField("String", "BASE_URL", "\"http://10.60.40.185:8080\"")
                     buildConfigField("String", "FLAVOR_NAME", "\"dev\"")
                     buildConfigField("Boolean", "MOCK_MODE", "true")
                 }
@@ -68,14 +68,14 @@ class ComposeMultiplatformApplicationConventionPlugin : Plugin<Project> {
                     dimension = "environment"
                     applicationIdSuffix = ".staging"
                     resValue("string", "app_name", "CMP Starter Staging")
-                    buildConfigField("String", "BASE_URL", "\"https://staging.api.example.com\"")
+                    buildConfigField("String", "BASE_URL", "\"http://10.60.40.185:8080\"")
                     buildConfigField("String", "FLAVOR_NAME", "\"staging\"")
                     buildConfigField("Boolean", "MOCK_MODE", "false")
                 }
                 create("prod") {
                     dimension = "environment"
                     resValue("string", "app_name", "CMP Starter")
-                    buildConfigField("String", "BASE_URL", "\"https://api.example.com\"")
+                    buildConfigField("String", "BASE_URL", "\"http://10.60.40.185:8080\"")
                     buildConfigField("String", "FLAVOR_NAME", "\"prod\"")
                     buildConfigField("Boolean", "MOCK_MODE", "false")
                 }

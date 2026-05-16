@@ -33,7 +33,9 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -61,50 +63,133 @@ import com.fajar.kmp.core.designsystem.PosRadioGroup
 import com.fajar.kmp.core.designsystem.PosSegmentedControl
 import com.fajar.kmp.core.designsystem.PosStatusPill
 import com.fajar.kmp.core.designsystem.PosTextField
+import com.fajar.kmp.core.network.data.StoreRegisterRequest
+import com.fajar.kmp.core.network.data.SyncRequest
+import com.fajar.kmp.core.network.data.TransactionCreateRequest
+import com.fajar.kmp.core.network.data.TransactionItemRequest
+import com.fajar.kmp.core.navigation.AppNavigator
+import com.fajar.kmp.core.navigation.AppRoute
+import com.fajar.kmp.core.navigation.displayTitle
+import com.fajar.kmp.pos.PosShellState
+import com.fajar.kmp.pos.PosShellViewModel
+import androidx.navigation3.runtime.NavEntry
+import androidx.navigation3.ui.NavDisplay
 import kotlinx.coroutines.delay
+import org.koin.compose.koinInject
 
-private enum class AppStage { Splash, Onboarding, Auth, StoreSetup, Home }
 private enum class AuthMode { Login, Register }
-private enum class HomeSection(val label: String) { Dashboard("Dashboard"), Catalog("Catalog"), Checkout("Checkout"), Sync("Sync"), Admin("Admin") }
+
+private const val DefaultStoreId = "demo-store"
+private const val DefaultSyncTimestamp = "2024-01-01T00:00:00Z"
 
 @Composable
 @Preview
 fun App() {
     CmpTheme {
-        var stage by rememberSaveable { mutableStateOf(AppStage.Splash) }
-        var authMode by rememberSaveable { mutableStateOf(AuthMode.Login) }
+        val viewModel = koinInject<PosShellViewModel>()
+        val shellState by viewModel.state.collectAsState()
+        val navigator = remember { AppNavigator() }
+        val backStack = remember { mutableStateListOf<AppRoute>().also { it += navigator.backStack } }
+        fun syncBackStack() {
+            backStack.clear()
+            backStack += navigator.backStack
+        }
 
         LaunchedEffect(Unit) {
             delay(900)
-            if (stage == AppStage.Splash) stage = AppStage.Onboarding
-        }
-
-        AnimatedContent(
-            targetState = stage,
-            transitionSpec = { fadeIn() togetherWith fadeOut() },
-            label = "pos-gg-flow",
-        ) { screen ->
-            when (screen) {
-                AppStage.Splash -> SplashScreen()
-                AppStage.Onboarding -> OnboardingScreen(
-                    onLogin = {
-                        authMode = AuthMode.Login
-                        stage = AppStage.Auth
-                    },
-                    onRegister = {
-                        authMode = AuthMode.Register
-                        stage = AppStage.Auth
-                    },
-                )
-                AppStage.Auth -> AuthScreen(
-                    mode = authMode,
-                    onModeChange = { authMode = it },
-                    onSuccess = { stage = AppStage.StoreSetup },
-                )
-                AppStage.StoreSetup -> StoreSetupScreen(onContinue = { stage = AppStage.Home })
-                AppStage.Home -> HomeScreen(onLogout = { stage = AppStage.Auth })
+            if (navigator.currentRoute == AppRoute.Splash) {
+                navigator.goToOnboarding()
+                syncBackStack()
             }
         }
+
+        LaunchedEffect(shellState.authStatus) {
+            if (shellState.authStatus == "Authenticated" || shellState.authStatus == "Registered") {
+                navigator.completeAuthentication(hasActiveStore = false)
+                syncBackStack()
+            }
+        }
+
+        LaunchedEffect(shellState.storeStatus) {
+            if (shellState.storeStatus.startsWith("Store registered:")) {
+                navigator.completeStoreSetup()
+                syncBackStack()
+            }
+        }
+
+        NavDisplay(
+            backStack = backStack,
+            onBack = {
+                if (navigator.goBack()) syncBackStack()
+            },
+            entryProvider = { route ->
+                NavEntry(route) {
+                    when (route) {
+                        AppRoute.Splash -> SplashScreen()
+                        AppRoute.Onboarding -> OnboardingScreen(
+                    onLogin = {
+                        navigator.goToLogin()
+                        syncBackStack()
+                    },
+                    onRegister = {
+                        navigator.goToRegister()
+                        syncBackStack()
+                    },
+                )
+                        AppRoute.Login, AppRoute.Register -> AuthScreen(
+                    mode = if (route == AppRoute.Register) AuthMode.Register else AuthMode.Login,
+                    state = shellState,
+                    onModeChange = {
+                        if (it == AuthMode.Register) navigator.goToRegister() else navigator.goToLogin()
+                        syncBackStack()
+                    },
+                    onSubmit = { fullName, email, password, phone, tenant ->
+                        if (route == AppRoute.Register) {
+                            viewModel.register(email, fullName, password, phone, tenant)
+                        } else {
+                            viewModel.login(email, password)
+                        }
+                    },
+                )
+                        AppRoute.StoreSetup -> StoreSetupScreen(state = shellState, onContinue = { request ->
+                            viewModel.registerStore(request)
+                        })
+                        AppRoute.Dashboard, AppRoute.Catalog, AppRoute.Checkout, AppRoute.Sync, AppRoute.Admin -> HomeScreen(
+                            route = route,
+                            state = shellState,
+                            onLoadCatalog = { viewModel.loadCatalog(DefaultStoreId) },
+                            onCheckout = { viewModel.checkout(DefaultStoreId, defaultTransactionRequest()) },
+                            onSync = { viewModel.sync(DefaultStoreId, SyncRequest(lastSyncTimestamp = DefaultSyncTimestamp)) },
+                            onLoadAdmin = { viewModel.loadAdmin() },
+                            onNavigate = {
+                                navigator.openHomeRoute(it)
+                                syncBackStack()
+                            },
+                            onLogout = {
+                                navigator.logout()
+                                syncBackStack()
+                            },
+                        )
+                        is AppRoute.ProductDetail -> HomeScreen(
+                            route = AppRoute.Catalog,
+                            state = shellState,
+                            onLoadCatalog = { viewModel.loadCatalog(DefaultStoreId) },
+                            onCheckout = { viewModel.checkout(DefaultStoreId, defaultTransactionRequest()) },
+                            onSync = { viewModel.sync(DefaultStoreId, SyncRequest(lastSyncTimestamp = DefaultSyncTimestamp)) },
+                            onLoadAdmin = { viewModel.loadAdmin() },
+                            onNavigate = {
+                                navigator.openHomeRoute(it)
+                                syncBackStack()
+                            },
+                            onLogout = {
+                                navigator.logout()
+                                syncBackStack()
+                            },
+                        )
+                    }
+                }
+            }
+        )
     }
 }
 
@@ -150,7 +235,12 @@ private fun OnboardingScreen(onLogin: () -> Unit, onRegister: () -> Unit) {
 }
 
 @Composable
-private fun AuthScreen(mode: AuthMode, onModeChange: (AuthMode) -> Unit, onSuccess: () -> Unit) {
+private fun AuthScreen(
+    mode: AuthMode,
+    state: PosShellState,
+    onModeChange: (AuthMode) -> Unit,
+    onSubmit: (String, String, String, String, String) -> Unit,
+) {
     var fullName by rememberSaveable { mutableStateOf("Admin POS") }
     var email by rememberSaveable { mutableStateOf("admin@posgg.dev") }
     var password by rememberSaveable { mutableStateOf("adminpass123") }
@@ -179,13 +269,20 @@ private fun AuthScreen(mode: AuthMode, onModeChange: (AuthMode) -> Unit, onSucce
                 PosTextField(tenant, { tenant = it }, "Tenant ID (optional)", placeholder = "auto assign")
             }
             Spacer(Modifier.height(18.dp))
-            PosButton(if (mode == AuthMode.Login) "Login dan lanjut setup" else "Register dan lanjut setup", onSuccess, Modifier.fillMaxWidth())
+            StatusRow("Auth", state.authStatus, state.isAuthLoading)
+            Spacer(Modifier.height(12.dp))
+            PosButton(
+                if (mode == AuthMode.Login) "Login dan lanjut setup" else "Register dan lanjut setup",
+                { onSubmit(fullName, email, password, phone, tenant) },
+                Modifier.fillMaxWidth(),
+                enabled = !state.isAuthLoading,
+            )
         }
     }
 }
 
 @Composable
-private fun StoreSetupScreen(onContinue: () -> Unit) {
+private fun StoreSetupScreen(state: PosShellState, onContinue: (StoreRegisterRequest) -> Unit) {
     var name by rememberSaveable { mutableStateOf("Toko Mas Bro") }
     var slug by rememberSaveable { mutableStateOf("toko-mas-bro") }
     var description by rememberSaveable { mutableStateOf("Toko serba ada") }
@@ -215,36 +312,64 @@ private fun StoreSetupScreen(onContinue: () -> Unit) {
             Spacer(Modifier.height(10.dp))
             PosTextField(email, { email = it }, "Store email", keyboardType = KeyboardType.Email)
             Spacer(Modifier.height(18.dp))
-            PosButton("Buka dashboard toko", onContinue, Modifier.fillMaxWidth())
+            StatusRow("Store", state.storeStatus, state.isStoreLoading)
+            Spacer(Modifier.height(12.dp))
+            PosButton(
+                "Buka dashboard toko",
+                {
+                    onContinue(
+                        StoreRegisterRequest(
+                            name = name,
+                            slug = slug,
+                            description = description,
+                            timezone = timezone,
+                            country = country,
+                            phone = phone,
+                            email = email,
+                        ),
+                    )
+                },
+                Modifier.fillMaxWidth(),
+                enabled = !state.isStoreLoading,
+            )
         }
     }
 }
 
 @Composable
-private fun HomeScreen(onLogout: () -> Unit) {
-    var section by rememberSaveable { mutableStateOf(HomeSection.Dashboard) }
+private fun HomeScreen(
+    route: AppRoute,
+    state: PosShellState,
+    onLoadCatalog: () -> Unit,
+    onCheckout: () -> Unit,
+    onSync: () -> Unit,
+    onLoadAdmin: () -> Unit,
+    onNavigate: (AppRoute) -> Unit,
+    onLogout: () -> Unit,
+) {
     Box(Modifier.fillMaxSize().background(PosPalette.Canvas).windowInsetsPadding(WindowInsets.safeDrawing)) {
         GridBackdrop(tint = PosPalette.Ocean.copy(alpha = 0.055f))
         Column(Modifier.fillMaxSize()) {
             Column(Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(18.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
                 HomeTopBar(onLogout)
-                AnimatedContent(section, transitionSpec = { fadeIn() togetherWith fadeOut() }, label = "section") { current ->
+                AnimatedContent(route, transitionSpec = { fadeIn() togetherWith fadeOut() }, label = "section") { current ->
                     when (current) {
-                        HomeSection.Dashboard -> DashboardSection()
-                        HomeSection.Catalog -> CatalogSection()
-                        HomeSection.Checkout -> CheckoutSection()
-                        HomeSection.Sync -> SyncSection()
-                        HomeSection.Admin -> AdminSection()
+                        AppRoute.Dashboard -> DashboardSection(state)
+                        AppRoute.Catalog -> CatalogSection(state, onLoadCatalog)
+                        AppRoute.Checkout -> CheckoutSection(state, onCheckout)
+                        AppRoute.Sync -> SyncSection(state, onSync)
+                        AppRoute.Admin -> AdminSection(state, onLoadAdmin)
+                        else -> DashboardSection()
                     }
                 }
             }
-            BottomBar(section) { section = it }
+            BottomBar(route, onNavigate)
         }
     }
 }
 
 @Composable
-private fun DashboardSection() {
+private fun DashboardSection(state: PosShellState = PosShellState()) {
     Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.fillMaxWidth()) {
             MetricCard("Revenue", "Rp 4.850.000", "/transactions", PosPalette.Ocean, Modifier.weight(1f))
@@ -255,11 +380,13 @@ private fun DashboardSection() {
             MetricCard("Stores", "24", "/admin/stores", PosPalette.OceanDark, Modifier.weight(1f))
         }
         SectionCard("Endpoint coverage", "Auth, Store Management, Catalog, Transaction, Offline Sync, dan Super Admin sudah direpresentasikan di flow UI.")
+        StatusRow("Auth", state.authStatus, state.isAuthLoading)
+        StatusRow("Store", state.storeStatus, state.isStoreLoading)
     }
 }
 
 @Composable
-private fun CatalogSection() {
+private fun CatalogSection(state: PosShellState, onLoadCatalog: () -> Unit) {
     var view by rememberSaveable { mutableStateOf("Products") }
     var trackStock by rememberSaveable { mutableStateOf(true) }
     var category by rememberSaveable { mutableStateOf("Makanan & Minuman") }
@@ -293,13 +420,15 @@ private fun CatalogSection() {
                 PosDropdown("Icon", "food", listOf("food", "drink", "retail", "service"), {})
             }
         }
+        StatusRow("Catalog", state.catalogStatus, state.isCatalogLoading)
+        PosButton("Load catalog", onLoadCatalog, Modifier.fillMaxWidth(), enabled = !state.isCatalogLoading)
         DataRow("GET categories", "/api/v1/stores/{storeId}/categories")
         DataRow("GET products", "/api/v1/stores/{storeId}/products")
     }
 }
 
 @Composable
-private fun CheckoutSection() {
+private fun CheckoutSection(state: PosShellState, onCheckout: () -> Unit) {
     var payment by rememberSaveable { mutableStateOf("CASH") }
     Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
         PosCard(padding = PaddingValues(18.dp)) {
@@ -316,14 +445,16 @@ private fun CheckoutSection() {
             Spacer(Modifier.height(10.dp))
             PosTextField("50000", {}, "Paid amount", keyboardType = KeyboardType.Number)
             Spacer(Modifier.height(16.dp))
-            PosButton("Charge Rp 30.000", {}, Modifier.fillMaxWidth())
+            StatusRow("Checkout", state.checkoutStatus, state.isCheckoutLoading)
+            Spacer(Modifier.height(12.dp))
+            PosButton("Charge Rp 30.000", onCheckout, Modifier.fillMaxWidth(), enabled = !state.isCheckoutLoading)
         }
         DataRow("GET transactions", "/api/v1/stores/{storeId}/transactions")
     }
 }
 
 @Composable
-private fun SyncSection() {
+private fun SyncSection(state: PosShellState, onSync: () -> Unit) {
     var autoSync by rememberSaveable { mutableStateOf(true) }
     Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
         PosCard(padding = PaddingValues(18.dp)) {
@@ -339,15 +470,19 @@ private fun SyncSection() {
             Spacer(Modifier.height(10.dp))
             PosCheckbox(autoSync, { autoSync = it }, "Auto sync when online", supportingText = "Push clientChanges then pull server updates")
             Spacer(Modifier.height(16.dp))
-            PosButton("Sync now", {}, Modifier.fillMaxWidth())
+            StatusRow("Sync", state.syncStatus, state.isSyncLoading)
+            Spacer(Modifier.height(12.dp))
+            PosButton("Sync now", onSync, Modifier.fillMaxWidth(), enabled = !state.isSyncLoading)
         }
     }
 }
 
 @Composable
-private fun AdminSection() {
+private fun AdminSection(state: PosShellState, onLoadAdmin: () -> Unit) {
     Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
         SectionCard("Super Admin Dashboard", "Collection exposes read-only admin stats, store list, and user list endpoints.")
+        StatusRow("Admin", state.adminStatus, state.isAdminLoading)
+        PosButton("Load admin stats", onLoadAdmin, Modifier.fillMaxWidth(), enabled = !state.isAdminLoading)
         DataRow("GET stats", "/api/v1/admin/stats")
         DataRow("GET stores", "/api/v1/admin/stores")
         DataRow("GET users", "/api/v1/admin/users")
@@ -388,16 +523,16 @@ private fun HomeTopBar(onLogout: () -> Unit) {
 }
 
 @Composable
-private fun BottomBar(selected: HomeSection, onSelected: (HomeSection) -> Unit) {
+private fun BottomBar(selected: AppRoute, onSelected: (AppRoute) -> Unit) {
     Surface(color = PosPalette.Surface, shadowElevation = 0.dp, tonalElevation = 0.dp, border = androidx.compose.foundation.BorderStroke(1.dp, PosPalette.Line)) {
         Row(Modifier.fillMaxWidth().padding(8.dp), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-            HomeSection.entries.forEach { item ->
+            listOf(AppRoute.Dashboard, AppRoute.Catalog, AppRoute.Checkout, AppRoute.Sync, AppRoute.Admin).forEach { item ->
                 val active = item == selected
                 Box(
                     modifier = Modifier.weight(1f).clip(RoundedCornerShape(16.dp)).clickable { onSelected(item) }.background(if (active) PosPalette.Wash else Color.Transparent).padding(vertical = 10.dp),
                     contentAlignment = Alignment.Center,
                 ) {
-                    Text(item.label, color = if (active) PosPalette.Ocean else PosPalette.Slate, fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, textAlign = TextAlign.Center)
+                    Text(item.displayTitle, color = if (active) PosPalette.Ocean else PosPalette.Slate, fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, textAlign = TextAlign.Center)
                 }
             }
         }
@@ -432,6 +567,42 @@ private fun DataRow(title: String, detail: String) {
         Text(detail, color = PosPalette.Slate, fontSize = 12.sp)
     }
 }
+
+@Composable
+private fun StatusRow(title: String, status: String, loading: Boolean) {
+    Row(Modifier.fillMaxWidth().clip(RoundedCornerShape(18.dp)).background(PosPalette.Wash).border(1.dp, PosPalette.Line, RoundedCornerShape(18.dp)).padding(14.dp), verticalAlignment = Alignment.CenterVertically) {
+        Box(Modifier.size(9.dp).clip(CircleShape).background(if (loading) PosPalette.Warning else statusColor(status)))
+        Spacer(Modifier.width(10.dp))
+        Text(title, color = PosPalette.Ink, fontWeight = FontWeight.ExtraBold, modifier = Modifier.weight(1f))
+        Text(if (loading) "Loading..." else status, color = PosPalette.Slate, fontSize = 12.sp, textAlign = TextAlign.End)
+    }
+}
+
+private fun statusColor(status: String): Color = when {
+    status.contains("unauthorized", ignoreCase = true) -> PosPalette.Danger
+    status.contains("failed", ignoreCase = true) -> PosPalette.Danger
+    status.contains("offline", ignoreCase = true) -> PosPalette.Danger
+    status.contains("empty", ignoreCase = true) -> PosPalette.Warning
+    status.contains("not ", ignoreCase = true) -> PosPalette.Muted
+    else -> PosPalette.Success
+}
+
+private fun defaultTransactionRequest() = TransactionCreateRequest(
+    items = listOf(
+        TransactionItemRequest(
+            productName = "Kopi Susu",
+            productSku = "KPS-001",
+            quantity = 2,
+            unitPrice = 15_000,
+            discountAmount = 0,
+        ),
+    ),
+    discountAmount = 0,
+    taxRate = 0,
+    paymentMethod = "CASH",
+    paidAmount = 50_000,
+    customerName = "Pak Budi",
+)
 
 @Composable
 private fun DarkMetric(value: String, label: String, modifier: Modifier = Modifier) {

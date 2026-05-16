@@ -1,0 +1,43 @@
+Reusing configuration cache.
+> Task :feature:pos:desktopProcessResources NO-SOURCE
+> Task :core:datastore:desktopProcessResources NO-SOURCE
+> Task :feature:pos:desktopTestProcessResources NO-SOURCE
+> Task :core:common:desktopProcessResources NO-SOURCE
+> Task :core:network:desktopProcessResources NO-SOURCE
+> Task :core:network:kmpPartiallyResolvedDependenciesChecker
+> Task :core:common:kmpPartiallyResolvedDependenciesChecker
+> Task :feature:pos:kmpPartiallyResolvedDependenciesChecker
+> Task :core:datastore:kmpPartiallyResolvedDependenciesChecker
+> Task :core:datastore:processDesktopMainResources SKIPPED
+> Task :core:network:processDesktopMainResources SKIPPED
+> Task :feature:pos:processDesktopTestResources SKIPPED
+> Task :core:datastore:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :feature:pos:processDesktopMainResources SKIPPED
+> Task :core:common:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :core:common:processDesktopMainResources SKIPPED
+> Task :feature:pos:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :core:network:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :core:common:compileKotlinDesktop UP-TO-DATE
+> Task :core:datastore:compileKotlinDesktop UP-TO-DATE
+> Task :core:datastore:compileDesktopMainJava NO-SOURCE
+> Task :core:common:compileDesktopMainJava NO-SOURCE
+> Task :core:datastore:desktopMainClasses UP-TO-DATE
+> Task :core:common:desktopMainClasses UP-TO-DATE
+> Task :core:datastore:desktopJar UP-TO-DATE
+> Task :core:common:desktopJar UP-TO-DATE
+> Task :core:network:compileKotlinDesktop UP-TO-DATE
+> Task :core:network:compileDesktopMainJava NO-SOURCE
+> Task :core:network:desktopMainClasses UP-TO-DATE
+> Task :core:network:desktopJar UP-TO-DATE
+> Task :feature:pos:compileKotlinDesktop UP-TO-DATE
+> Task :feature:pos:compileDesktopMainJava NO-SOURCE
+> Task :feature:pos:desktopMainClasses UP-TO-DATE
+> Task :feature:pos:desktopJar UP-TO-DATE
+> Task :feature:pos:compileTestKotlinDesktop UP-TO-DATE
+> Task :feature:pos:compileDesktopTestJava NO-SOURCE
+> Task :feature:pos:desktopTestClasses UP-TO-DATE
+> Task :feature:pos:desktopTest
+
+BUILD SUCCESSFUL in 1s
+14 actionable tasks: 5 executed, 9 up-to-date
+Configuration cache entry reused.

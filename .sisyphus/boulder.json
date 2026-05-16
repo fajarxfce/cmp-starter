@@ -1,0 +1,84 @@
+{
+  "active_plan": "/home/fajar/Documents/cmp/cmp-lagi/cmp-starter/.sisyphus/plans/cmp-pos-architecture-setup.md",
+  "started_at": "2026-05-10T01:08:32.953Z",
+  "session_ids": [
+    "ses_1f0becb98ffeRU4yHkEYnHsZwH",
+    "ses_1f090aaf3ffenW1sK6G8jGNWI7",
+    "ses_1f090aa3dffeIlOJUyXvI4Hi2J",
+    "ses_1f090aa35ffebAxRSq0gb8Z6PG",
+    "ses_1f090aa2bffeb8hDxtjkeSetOA"
+  ],
+  "plan_name": "cmp-pos-architecture-setup",
+  "session_origins": {
+    "ses_1f0becb98ffeRU4yHkEYnHsZwH": "direct",
+    "ses_1f090aaf3ffenW1sK6G8jGNWI7": "appended",
+    "ses_1f090aa3dffeIlOJUyXvI4Hi2J": "appended",
+    "ses_1f090aa35ffebAxRSq0gb8Z6PG": "appended",
+    "ses_1f090aa2bffeb8hDxtjkeSetOA": "appended"
+  },
+  "task_sessions": {
+    "todo:1": {
+      "task_key": "todo:1",
+      "task_label": "1",
+      "task_title": "Gradle foundations and config placeholders",
+      "session_id": "ses_1f0892f5bffeg06Y4Z5SGLVo7B",
+      "agent": "Sisyphus-Junior",
+      "category": "unspecified-high",
+      "updated_at": "2026-05-10T05:36:30.192Z"
+    },
+    "todo:2": {
+      "task_key": "todo:2",
+      "task_label": "2",
+      "task_title": "POS API contracts and DTO tests",
+      "session_id": "ses_1ef9bb504ffedaHhOAVzltcKvK",
+      "agent": "Sisyphus-Junior",
+      "category": "quick",
+      "updated_at": "2026-05-10T05:43:08.082Z"
+    },
+    "todo:3": {
+      "task_key": "todo:3",
+      "task_label": "3",
+      "task_title": "Koin module graph migration",
+      "session_id": "ses_1e35b9e05ffeM0RYi3elvDmJtq",
+      "agent": "Sisyphus-Junior",
+      "category": "quick",
+      "updated_at": "2026-05-12T14:51:21.660Z"
+    },
+    "todo:6": {
+      "task_key": "todo:6",
+      "task_label": "6",
+      "task_title": "POS repositories and use cases",
+      "session_id": "ses_1e34f8c5fffeOSSXzuHi711AP6",
+      "agent": "Sisyphus-Junior",
+      "category": "unspecified-high",
+      "updated_at": "2026-05-16T03:21:30.593Z"
+    },
+    "todo:8": {
+      "task_key": "todo:8",
+      "task_label": "8",
+      "task_title": "POS UI migration",
+      "session_id": "ses_1d12f4a65ffevSXum8Fzm72mD2",
+      "agent": "general",
+      "category": "visual-engineering",
+      "updated_at": "2026-05-16T03:44:10.581Z"
+    },
+    "todo:9": {
+      "task_key": "todo:9",
+      "task_label": "9",
+      "task_title": "Cleanup and build hardening",
+      "session_id": "ses_1d11c8228ffedzs3H5ESBjvnUP",
+      "agent": "Sisyphus-Junior",
+      "category": "unspecified-high",
+      "updated_at": "2026-05-16T03:48:17.588Z"
+    },
+    "final-wave:f1": {
+      "task_key": "final-wave:f1",
+      "task_label": "F1",
+      "task_title": "Plan Compliance Audit — oracle",
+      "session_id": "ses_1d118bf39ffetD7M9Dzx7QNimg",
+      "agent": "oracle",
+      "category": "",
+      "updated_at": "2026-05-16T03:52:15.191Z"
+    }
+  }
+}

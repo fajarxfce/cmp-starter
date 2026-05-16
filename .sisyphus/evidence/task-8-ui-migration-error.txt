@@ -1,0 +1,26 @@
+Task 8 UI migration blockers/errors - 2026-05-16
+
+LSP blocker:
+- `lsp_diagnostics` timed out while initializing the Kotlin language server for the edited files.
+- This was not a Kotlin compile failure; Gradle verification was used as the authoritative verification path.
+
+Initial verification failure:
+- First `./gradlew :composeApp:allTests :composeApp:assembleDevDebug` attempt after adding the shell Koin binding failed in `KoinModuleVerificationTest`.
+- Cause: `verifyAll()` verifies modules independently, so `PosShellViewModel` in the app module could not see the `PosRepository` definition when the POS feature module was listed separately.
+- Fix: `appPosShellModule` now `includes(posModule)` and `productionAppModules` includes `appPosShellModule` instead of listing `posModule` separately.
+
+Desktop smoke blocker:
+- `./gradlew :composeApp:run` failed at runtime after launch.
+- Root cause from output lines 275, 294, and 313 in `/home/fajar/.local/share/opencode/tool-output/tool_e2edc858f001ncI50R8vGzb6bJ`:
+  `java.lang.IllegalArgumentException: Base URL is still a placeholder: REPLACE_WITH_DESKTOP_BASE_URL`.
+- This appears to be an environment/configuration blocker, not a Task 8 UI compile/test failure. The plan context requires config placeholders and no hardcoded real dev/staging/prod URL, so no real URL was added.
+
+Task 8 navigation bugfix notes - 2026-05-16
+
+Atlas-reported bug fixed:
+- Previous behavior: auth and store submit callbacks called repository-backed `PosShellViewModel` methods and immediately navigated, so failures could leave the user on the wrong route.
+- New behavior: submit callbacks only trigger view model work; route changes happen only from success status values observed in `LaunchedEffect`.
+
+Remaining verification limitation:
+- Direct Compose route assertion was not added in this pass because current app tests do not include Compose UI test infrastructure for `NavDisplay` route inspection.
+- Added view model failure-state tests instead, which verify failure messages remain present for the UI to render and avoid success-status triggers.

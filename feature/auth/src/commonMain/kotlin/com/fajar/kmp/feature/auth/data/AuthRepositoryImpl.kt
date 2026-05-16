@@ -1,6 +1,6 @@
 package com.fajar.kmp.feature.auth.data
 
-import com.fajar.kmp.core.datastore.KeyValueStore
+import com.fajar.kmp.core.datastore.SessionPreferences
 import com.fajar.kmp.feature.auth.domain.model.AuthError
 import com.fajar.kmp.feature.auth.domain.model.AuthResult
 import com.fajar.kmp.feature.auth.domain.model.AuthSession
@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class AuthRepositoryImpl(
-    private val tokenStore: KeyValueStore,
+    private val sessionPreferences: SessionPreferences,
 ) : AuthRepository {
     private val session = MutableStateFlow<AuthSession?>(null)
 
@@ -34,7 +34,7 @@ class AuthRepositoryImpl(
     }
 
     override suspend fun logout() {
-        tokenStore.clear()
+        sessionPreferences.clearSession()
         session.value = null
     }
 
@@ -47,8 +47,6 @@ class AuthRepositoryImpl(
     }
 
     private suspend fun persist(authSession: AuthSession) {
-        tokenStore.putString("auth.accessToken", authSession.tokens.accessToken)
-        tokenStore.putString("auth.refreshToken", authSession.tokens.refreshToken)
-        tokenStore.putString("auth.email", authSession.user.email)
+        sessionPreferences.saveAccessToken(authSession.tokens.accessToken)
     }
 }

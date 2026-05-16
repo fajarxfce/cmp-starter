@@ -1,6 +1,7 @@
 plugins {
     id("cmp.kotlin.multiplatform.library")
     id("cmp.test")
+    id("cmp.koin")
 }
 
 kotlin {

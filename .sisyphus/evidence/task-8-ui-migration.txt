@@ -1,0 +1,35 @@
+Task 8 UI migration evidence - 2026-05-16
+
+Implemented:
+- Added app-level Koin binding for `PosShellViewModel` in `composeApp/src/commonMain/kotlin/com/fajar/kmp/di/AppKoin.kt`.
+- Wired `composeApp/src/commonMain/kotlin/com/fajar/kmp/App.kt` to inject `PosShellViewModel` with Koin and collect `PosShellState`.
+- Wired auth submit to `login` or `register`, store setup continue to `registerStore`, catalog to `loadCatalog`, checkout to `checkout`, sync to `sync`, and admin to `loadAdmin`.
+- Rendered status/loading feedback through existing POS design-system components while preserving the current visual style.
+- Kept scope to existing auth/store/catalog/checkout/sync/admin shell actions; no payment/receipt/update/delete endpoints were added.
+
+Verification:
+- `lsp_diagnostics` attempted for `App.kt`, `AppKoin.kt`, and `PosShellViewModel.kt`; Kotlin LSP initialization timed out.
+- `./gradlew :composeApp:allTests :composeApp:assembleDevDebug` passed.
+- Gradle output: `/home/fajar/.local/share/opencode/tool-output/tool_e2edc2ebd0017dgFNKx9BahAVf`.
+- Success evidence: lines 1089-1093 show `:composeApp:desktopTest`, `:composeApp:allTests`, `BUILD SUCCESSFUL in 5s`, and 634 actionable tasks.
+
+Smoke attempt:
+- `./gradlew :composeApp:run` was attempted.
+- Smoke output: `/home/fajar/.local/share/opencode/tool-output/tool_e2edc858f001ncI50R8vGzb6bJ`.
+- The desktop run compiled and launched the `:composeApp:run` task, then failed during composition because `AppRuntimeConfig.desktop` still uses placeholder base URL `REPLACE_WITH_DESKTOP_BASE_URL`.
+
+Task 8 navigation bugfix evidence - 2026-05-16
+
+Implemented:
+- Removed immediate `navigator.completeAuthentication(...)` from auth submit in `App.kt`.
+- Removed immediate `navigator.completeStoreSetup()` from store setup submit in `App.kt`.
+- Added success-gated `LaunchedEffect(shellState.authStatus)` navigation for `Authenticated` and `Registered` only.
+- Added success-gated `LaunchedEffect(shellState.storeStatus)` navigation for `Store registered:` only.
+- Failure statuses now remain visible on auth/store routes because failed submit callbacks only update `PosShellState`.
+- Added `PosShellViewModelTest` coverage for register failure and store failure state updates.
+
+Verification:
+- `lsp_diagnostics` attempted again for `App.kt` and `PosShellViewModelTest.kt`; Kotlin LSP initialization timed out.
+- `./gradlew :composeApp:allTests :composeApp:assembleDevDebug` passed.
+- Gradle output: `/home/fajar/.local/share/opencode/tool-output/tool_e2ee17ba4001dYjSCoXmA4fZiB`.
+- Success evidence: lines 1170-1183 show `:composeApp:assembleDevDebug`, test tasks, `:composeApp:allTests`, and `BUILD SUCCESSFUL in 7s`.

@@ -1,0 +1,578 @@
+Starting a Gradle Daemon (subsequent builds will be faster)
+Calculating task graph as configuration cache cannot be reused because JVM has changed.
+Type-safe project accessors is an incubating feature.
+> Task :build-logic:convention:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :build-logic:convention:pluginDescriptors UP-TO-DATE
+> Task :build-logic:convention:processResources UP-TO-DATE
+> Task :build-logic:convention:compileKotlin
+> Task :build-logic:convention:compileJava NO-SOURCE
+> Task :build-logic:convention:classes UP-TO-DATE
+> Task :build-logic:convention:jar UP-TO-DATE
+> Task :core:network:preBuild UP-TO-DATE
+> Task :core:network:preDebugBuild UP-TO-DATE
+> Task :core:datastore:preBuild UP-TO-DATE
+> Task :core:common:preBuild UP-TO-DATE
+> Task :core:common:preDebugBuild UP-TO-DATE
+> Task :core:network:kmpPartiallyResolvedDependenciesChecker
+> Task :core:datastore:kmpPartiallyResolvedDependenciesChecker
+> Task :core:common:kmpPartiallyResolvedDependenciesChecker
+> Task :core:common:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :core:network:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :core:network:preDebugUnitTestBuild UP-TO-DATE
+> Task :core:datastore:desktopTestProcessResources NO-SOURCE
+> Task :core:common:desktopProcessResources NO-SOURCE
+> Task :core:common:preReleaseBuild UP-TO-DATE
+> Task :core:network:desktopTestProcessResources NO-SOURCE
+> Task :core:datastore:desktopProcessResources NO-SOURCE
+> Task :core:network:desktopProcessResources NO-SOURCE
+> Task :core:common:processDesktopMainResources SKIPPED
+> Task :core:network:processDesktopTestResources SKIPPED
+> Task :core:network:preReleaseBuild UP-TO-DATE
+> Task :core:network:preReleaseUnitTestBuild UP-TO-DATE
+> Task :core:network:processDesktopMainResources SKIPPED
+> Task :core:network:iosSimulatorArm64ProcessResources NO-SOURCE
+> Task :core:datastore:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :core:common:generateDebugResValues
+> Task :core:common:generateReleaseResValues
+> Task :core:network:generateDebugResValues
+> Task :core:network:generateReleaseResValues
+> Task :core:common:generateReleaseResources
+> Task :core:network:generateReleaseResources
+> Task :core:common:generateDebugResources
+> Task :core:network:generateDebugResources
+> Task :core:network:javaPreCompileDebugUnitTest
+> Task :core:datastore:processDesktopMainResources SKIPPED
+> Task :core:datastore:processDesktopTestResources SKIPPED
+> Task :core:datastore:iosSimulatorArm64ProcessResources NO-SOURCE
+> Task :core:datastore:preDebugBuild UP-TO-DATE
+> Task :core:common:exportCrossCompilationMetadataForIosSimulatorArm64ApiElements
+> Task :core:datastore:generateDebugResValues FROM-CACHE
+> Task :core:datastore:javaPreCompileDebug FROM-CACHE
+> Task :core:datastore:preDebugUnitTestBuild UP-TO-DATE
+> Task :core:datastore:generateDebugResources FROM-CACHE
+> Task :core:datastore:javaPreCompileDebugUnitTest FROM-CACHE
+> Task :core:datastore:preReleaseBuild UP-TO-DATE
+> Task :core:datastore:generateReleaseResValues FROM-CACHE
+> Task :core:datastore:generateReleaseResources FROM-CACHE
+> Task :core:common:packageReleaseResources
+> Task :core:common:packageDebugResources
+> Task :core:datastore:packageDebugResources
+> Task :core:network:packageDebugResources
+> Task :core:datastore:packageReleaseResources
+> Task :core:network:packageReleaseResources
+> Task :core:common:javaPreCompileDebug
+> Task :core:datastore:javaPreCompileRelease FROM-CACHE
+> Task :core:datastore:preReleaseUnitTestBuild UP-TO-DATE
+> Task :core:datastore:javaPreCompileReleaseUnitTest FROM-CACHE
+> Task :core:navigation:kmpPartiallyResolvedDependenciesChecker
+> Task :core:navigation:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :core:common:javaPreCompileRelease
+> Task :core:navigation:desktopProcessResources NO-SOURCE
+> Task :core:navigation:processDesktopMainResources SKIPPED
+> Task :core:navigation:desktopTestProcessResources NO-SOURCE
+> Task :core:navigation:processDesktopTestResources SKIPPED
+> Task :core:datastore:parseDebugLocalResources
+> Task :core:common:parseReleaseLocalResources FROM-CACHE
+> Task :core:datastore:parseReleaseLocalResources FROM-CACHE
+> Task :core:common:generateReleaseRFile
+> Task :core:network:parseDebugLocalResources FROM-CACHE
+> Task :core:datastore:generateDebugRFile
+> Task :core:network:javaPreCompileRelease
+> Task :core:common:parseDebugLocalResources FROM-CACHE
+> Task :core:common:generateDebugRFile FROM-CACHE
+> Task :core:datastore:generateReleaseRFile
+> Task :core:network:javaPreCompileReleaseUnitTest
+> Task :core:network:parseReleaseLocalResources FROM-CACHE
+> Task :core:network:javaPreCompileDebug
+> Task :core:navigation:iosSimulatorArm64ProcessResources NO-SOURCE
+> Task :core:navigation:preBuild UP-TO-DATE
+> Task :core:navigation:preDebugBuild UP-TO-DATE
+> Task :core:navigation:generateDebugResValues FROM-CACHE
+> Task :core:navigation:generateDebugResources FROM-CACHE
+> Task :core:network:generateDebugRFile
+> Task :core:navigation:packageDebugResources
+> Task :core:navigation:parseDebugLocalResources FROM-CACHE
+> Task :core:datastore:generateReleaseUnitTestStubRFile
+> Task :core:navigation:javaPreCompileDebug FROM-CACHE
+> Task :core:network:generateReleaseRFile
+> Task :core:navigation:preDebugUnitTestBuild UP-TO-DATE
+> Task :core:navigation:javaPreCompileDebugUnitTest FROM-CACHE
+> Task :core:navigation:preReleaseBuild UP-TO-DATE
+> Task :core:navigation:generateReleaseResValues FROM-CACHE
+> Task :core:navigation:generateReleaseResources FROM-CACHE
+> Task :core:navigation:packageReleaseResources
+> Task :core:navigation:parseReleaseLocalResources FROM-CACHE
+> Task :core:navigation:generateDebugRFile
+> Task :core:navigation:generateReleaseRFile
+> Task :core:network:generateDebugUnitTestStubRFile
+> Task :core:datastore:generateDebugUnitTestStubRFile FROM-CACHE
+> Task :core:navigation:javaPreCompileRelease FROM-CACHE
+> Task :core:navigation:preReleaseUnitTestBuild UP-TO-DATE
+> Task :core:network:generateReleaseUnitTestStubRFile
+> Task :core:navigation:javaPreCompileReleaseUnitTest FROM-CACHE
+> Task :core:datastore:compileReleaseKotlinAndroid
+> Task :core:datastore:compileKotlinDesktop
+> Task :core:datastore:compileReleaseJavaWithJavac NO-SOURCE
+> Task :core:datastore:compileDesktopMainJava NO-SOURCE
+> Task :core:datastore:desktopMainClasses
+> Task :core:datastore:compileDebugKotlinAndroid
+> Task :core:datastore:desktopJar UP-TO-DATE
+> Task :core:datastore:compileDebugJavaWithJavac NO-SOURCE
+> Task :core:datastore:processReleaseJavaRes
+> Task :core:datastore:bundleLibCompileToJarDebug
+> Task :core:datastore:bundleLibRuntimeToJarDebug
+> Task :core:navigation:compileKotlinDesktop
+> Task :core:datastore:bundleLibRuntimeToJarRelease
+> Task :core:common:compileKotlinDesktop
+> Task :core:common:compileDebugKotlinAndroid
+> Task :core:common:compileDesktopMainJava NO-SOURCE
+> Task :core:common:compileDebugJavaWithJavac NO-SOURCE
+> Task :core:common:desktopMainClasses
+> Task :core:navigation:compileReleaseKotlinAndroid
+> Task :core:datastore:processDebugJavaRes
+> Task :core:common:desktopJar UP-TO-DATE
+> Task :core:common:processDebugJavaRes
+> Task :core:navigation:compileDesktopMainJava NO-SOURCE
+> Task :core:navigation:desktopMainClasses
+> Task :core:navigation:compileReleaseJavaWithJavac NO-SOURCE
+> Task :core:datastore:bundleLibCompileToJarRelease
+> Task :core:common:bundleLibRuntimeToJarDebug
+> Task :core:navigation:desktopJar UP-TO-DATE
+> Task :core:common:bundleLibCompileToJarDebug
+> Task :core:navigation:bundleLibCompileToJarRelease
+> Task :core:common:compileReleaseKotlinAndroid
+> Task :core:navigation:bundleLibRuntimeToJarRelease
+> Task :core:navigation:compileDebugKotlinAndroid
+> Task :core:common:compileReleaseJavaWithJavac NO-SOURCE
+> Task :core:navigation:processReleaseJavaRes
+> Task :core:common:processReleaseJavaRes
+> Task :core:common:bundleLibCompileToJarRelease
+> Task :core:navigation:compileDebugJavaWithJavac NO-SOURCE
+> Task :core:navigation:bundleLibRuntimeToJarDebug
+> Task :core:navigation:bundleLibCompileToJarDebug
+> Task :core:common:bundleLibRuntimeToJarRelease
+> Task :core:navigation:processDebugJavaRes
+> Task :core:datastore:compileTestKotlinDesktop
+> Task :core:datastore:compileDesktopTestJava NO-SOURCE
+> Task :core:datastore:desktopTestClasses
+> Task :core:datastore:compileDebugUnitTestKotlinAndroid
+> Task :core:datastore:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :core:datastore:processDebugUnitTestJavaRes
+> Task :core:datastore:compileReleaseUnitTestKotlinAndroid
+> Task :core:datastore:compileReleaseUnitTestJavaWithJavac NO-SOURCE
+> Task :core:datastore:processReleaseUnitTestJavaRes
+> Task :core:navigation:compileTestKotlinDesktop
+> Task :core:navigation:compileDesktopTestJava NO-SOURCE
+> Task :core:navigation:desktopTestClasses
+> Task :core:datastore:desktopTest
+> Task :core:navigation:desktopTest
+> Task :core:datastore:testDebugUnitTest
+> Task :core:datastore:testReleaseUnitTest
+> Task :core:datastore:downloadKotlinNativeDistribution
+> Task :core:network:downloadKotlinNativeDistribution
+> Task :core:common:downloadKotlinNativeDistribution
+> Task :core:navigation:downloadKotlinNativeDistribution
+> Task :core:navigation:generateReleaseUnitTestStubRFile
+> Task :core:navigation:generateDebugUnitTestStubRFile
+> Task :core:navigation:compileReleaseUnitTestKotlinAndroid
+> Task :core:navigation:compileReleaseUnitTestJavaWithJavac NO-SOURCE
+> Task :core:navigation:processReleaseUnitTestJavaRes
+> Task :core:navigation:compileDebugUnitTestKotlinAndroid
+> Task :core:navigation:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :core:navigation:processDebugUnitTestJavaRes
+> Task :core:network:compileKotlinDesktop
+> Task :core:network:compileDesktopMainJava NO-SOURCE
+> Task :core:network:desktopMainClasses
+> Task :core:network:desktopJar UP-TO-DATE
+> Task :core:network:compileReleaseKotlinAndroid
+> Task :core:network:compileReleaseJavaWithJavac NO-SOURCE
+> Task :core:network:compileDebugKotlinAndroid
+> Task :core:network:compileDebugJavaWithJavac NO-SOURCE
+> Task :core:network:bundleLibRuntimeToJarRelease
+> Task :core:network:bundleLibCompileToJarRelease
+> Task :core:network:bundleLibRuntimeToJarDebug
+> Task :core:network:processReleaseJavaRes
+> Task :core:network:bundleLibCompileToJarDebug
+> Task :core:network:processDebugJavaRes
+> Task :core:navigation:testReleaseUnitTest
+> Task :core:navigation:testDebugUnitTest
+> Task :core:network:compileTestKotlinDesktop
+> Task :core:network:compileDesktopTestJava NO-SOURCE
+> Task :core:network:desktopTestClasses
+> Task :core:network:compileReleaseUnitTestKotlinAndroid
+> Task :core:network:compileDebugUnitTestKotlinAndroid
+> Task :core:network:compileReleaseUnitTestJavaWithJavac NO-SOURCE
+> Task :core:network:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :core:network:processDebugUnitTestJavaRes
+> Task :core:network:processReleaseUnitTestJavaRes
+> Task :core:network:desktopTest
+> Task :core:network:testReleaseUnitTest
+> Task :core:network:testDebugUnitTest
+> Task :core:datastore:compileKotlinIosSimulatorArm64
+> Task :core:common:compileKotlinIosSimulatorArm64
+> Task :core:navigation:compileKotlinIosSimulatorArm64
+> Task :core:datastore:iosSimulatorArm64MainKlibrary
+> Task :core:navigation:iosSimulatorArm64MainKlibrary
+> Task :core:datastore:compileTestKotlinIosSimulatorArm64
+> Task :core:datastore:linkDebugTestIosSimulatorArm64 SKIPPED
+> Task :core:datastore:iosSimulatorArm64Test SKIPPED
+> Task :core:datastore:allTests
+> Task :core:navigation:compileTestKotlinIosSimulatorArm64
+> Task :core:navigation:linkDebugTestIosSimulatorArm64 SKIPPED
+> Task :core:navigation:iosSimulatorArm64Test SKIPPED
+> Task :core:navigation:allTests
+> Task :core:network:compileKotlinIosSimulatorArm64
+> Task :core:network:iosSimulatorArm64MainKlibrary
+> Task :core:network:compileTestKotlinIosSimulatorArm64
+> Task :core:network:linkDebugTestIosSimulatorArm64 SKIPPED
+> Task :core:network:iosSimulatorArm64Test SKIPPED
+> Task :core:network:allTests
+
+BUILD SUCCESSFUL in 49s
+147 actionable tasks: 115 executed, 25 from cache, 7 up-to-date
+Configuration cache entry stored.
+Calculating task graph as configuration cache cannot be reused because JVM has changed.
+Type-safe project accessors is an incubating feature.
+> Task :build-logic:convention:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :build-logic:convention:compileKotlin UP-TO-DATE
+> Task :build-logic:convention:compileJava NO-SOURCE
+> Task :build-logic:convention:pluginDescriptors UP-TO-DATE
+> Task :build-logic:convention:processResources UP-TO-DATE
+> Task :build-logic:convention:classes UP-TO-DATE
+> Task :build-logic:convention:jar UP-TO-DATE
+> Task :core:common:preBuild UP-TO-DATE
+> Task :core:design-system:preBuild UP-TO-DATE
+> Task :composeApp:preBuild UP-TO-DATE
+> Task :core:common:preDebugBuild UP-TO-DATE
+> Task :composeApp:preDevDebugBuild UP-TO-DATE
+> Task :core:design-system:preDebugBuild UP-TO-DATE
+> Task :composeApp:kmpPartiallyResolvedDependenciesChecker
+> Task :composeApp:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :composeApp:mergeDevDebugNativeDebugMetadata NO-SOURCE
+> Task :core:domain:preBuild UP-TO-DATE
+> Task :core:domain:preDebugBuild UP-TO-DATE
+> Task :composeApp:convertXmlValueResourcesForAndroidDebug NO-SOURCE
+> Task :core:sync:preBuild UP-TO-DATE
+> Task :core:model:preBuild UP-TO-DATE
+> Task :core:navigation:preBuild UP-TO-DATE
+> Task :feature:todo:preBuild UP-TO-DATE
+> Task :core:network:preBuild UP-TO-DATE
+> Task :core:navigation:preDebugBuild UP-TO-DATE
+> Task :composeApp:copyNonXmlValueResourcesForAndroidMain NO-SOURCE
+> Task :composeApp:convertXmlValueResourcesForCommonMain NO-SOURCE
+> Task :composeApp:copyNonXmlValueResourcesForAndroidDebug NO-SOURCE
+> Task :composeApp:copyNonXmlValueResourcesForAndroidDevDebug NO-SOURCE
+> Task :composeApp:convertXmlValueResourcesForAndroidDev NO-SOURCE
+> Task :feature:todo:preDebugBuild UP-TO-DATE
+> Task :composeApp:convertXmlValueResourcesForAndroidMain NO-SOURCE
+> Task :core:network:preDebugBuild UP-TO-DATE
+> Task :core:sync:preDebugBuild UP-TO-DATE
+> Task :core:model:preDebugBuild UP-TO-DATE
+> Task :composeApp:copyNonXmlValueResourcesForAndroidDev NO-SOURCE
+> Task :composeApp:convertXmlValueResourcesForAndroidDevDebug NO-SOURCE
+> Task :composeApp:prepareComposeResourcesTaskForAndroidMain NO-SOURCE
+> Task :composeApp:prepareComposeResourcesTaskForAndroidDebug NO-SOURCE
+> Task :composeApp:prepareComposeResourcesTaskForAndroidDev NO-SOURCE
+> Task :composeApp:prepareComposeResourcesTaskForAndroidDevDebug NO-SOURCE
+> Task :composeApp:generateDevDebugBuildConfig
+> Task :composeApp:generateResourceAccessorsForAndroidDev NO-SOURCE
+> Task :composeApp:generateResourceAccessorsForAndroidDebug NO-SOURCE
+> Task :core:common:writeDebugAarMetadata
+> Task :core:domain:writeDebugAarMetadata
+> Task :composeApp:generateResourceAccessorsForAndroidMain NO-SOURCE
+> Task :composeApp:generateResourceAccessorsForAndroidDevDebug NO-SOURCE
+> Task :core:design-system:writeDebugAarMetadata
+> Task :core:common:generateDebugResValues UP-TO-DATE
+> Task :core:model:writeDebugAarMetadata
+> Task :feature:todo:writeDebugAarMetadata
+> Task :core:navigation:writeDebugAarMetadata
+> Task :core:network:writeDebugAarMetadata
+> Task :core:sync:writeDebugAarMetadata
+> Task :core:navigation:generateDebugResValues UP-TO-DATE
+> Task :core:network:generateDebugResValues UP-TO-DATE
+> Task :core:common:generateDebugResources UP-TO-DATE
+> Task :core:network:generateDebugResources UP-TO-DATE
+> Task :core:navigation:generateDebugResources UP-TO-DATE
+> Task :core:design-system:convertXmlValueResourcesForAndroidDebug NO-SOURCE
+> Task :core:design-system:convertXmlValueResourcesForAndroidMain NO-SOURCE
+> Task :core:design-system:convertXmlValueResourcesForCommonMain NO-SOURCE
+> Task :core:common:packageDebugResources UP-TO-DATE
+> Task :composeApp:copyNonXmlValueResourcesForCommonMain
+> Task :core:network:packageDebugResources UP-TO-DATE
+> Task :core:navigation:packageDebugResources UP-TO-DATE
+> Task :core:domain:generateDebugResValues FROM-CACHE
+> Task :core:design-system:generateDebugResValues FROM-CACHE
+> Task :core:model:generateDebugResValues FROM-CACHE
+> Task :core:design-system:copyNonXmlValueResourcesForAndroidMain NO-SOURCE
+> Task :core:design-system:copyNonXmlValueResourcesForAndroidDebug NO-SOURCE
+> Task :core:sync:generateDebugResValues FROM-CACHE
+> Task :core:design-system:copyNonXmlValueResourcesForCommonMain NO-SOURCE
+> Task :feature:todo:convertXmlValueResourcesForCommonMain NO-SOURCE
+> Task :feature:todo:convertXmlValueResourcesForAndroidDebug NO-SOURCE
+> Task :feature:todo:copyNonXmlValueResourcesForAndroidDebug NO-SOURCE
+> Task :feature:todo:copyNonXmlValueResourcesForCommonMain NO-SOURCE
+> Task :feature:todo:convertXmlValueResourcesForAndroidMain NO-SOURCE
+> Task :core:design-system:prepareComposeResourcesTaskForAndroidMain NO-SOURCE
+> Task :feature:todo:copyNonXmlValueResourcesForAndroidMain NO-SOURCE
+> Task :feature:todo:prepareComposeResourcesTaskForCommonMain NO-SOURCE
+> Task :feature:todo:prepareComposeResourcesTaskForAndroidMain NO-SOURCE
+> Task :feature:todo:generateDebugResValues FROM-CACHE
+> Task :core:design-system:prepareComposeResourcesTaskForAndroidDebug NO-SOURCE
+> Task :core:design-system:prepareComposeResourcesTaskForCommonMain NO-SOURCE
+> Task :feature:todo:prepareComposeResourcesTaskForAndroidDebug NO-SOURCE
+> Task :core:domain:generateDebugResources FROM-CACHE
+> Task :feature:todo:generateDebugResources FROM-CACHE
+> Task :core:model:generateDebugResources FROM-CACHE
+> Task :core:design-system:generateDebugResources FROM-CACHE
+> Task :core:sync:generateDebugResources FROM-CACHE
+> Task :core:common:extractDeepLinksDebug
+> Task :core:design-system:copyDebugComposeResourcesToAndroidAssets
+> Task :composeApp:generateDevDebugResValues
+> Task :feature:todo:copyDebugComposeResourcesToAndroidAssets
+> Task :core:design-system:extractDeepLinksDebug
+> Task :composeApp:createDevDebugCompatibleScreenManifests
+> Task :core:model:extractDeepLinksDebug FROM-CACHE
+> Task :composeApp:prepareComposeResourcesTaskForCommonMain
+> Task :core:domain:extractDeepLinksDebug
+> Task :core:domain:packageDebugResources
+> Task :composeApp:extractDeepLinksDevDebug FROM-CACHE
+> Task :core:model:packageDebugResources
+> Task :core:design-system:packageDebugResources
+> Task :core:sync:packageDebugResources
+> Task :core:navigation:extractDeepLinksDebug FROM-CACHE
+> Task :feature:todo:packageDebugResources
+> Task :composeApp:copyDevDebugComposeResourcesToAndroidAssets
+> Task :core:sync:extractDeepLinksDebug FROM-CACHE
+> Task :composeApp:generateDevDebugResources
+> Task :core:network:extractDeepLinksDebug FROM-CACHE
+> Task :feature:todo:extractDeepLinksDebug FROM-CACHE
+> Task :composeApp:generateResourceAccessorsForCommonMain
+> Task :composeApp:generateComposeResClass
+> Task :composeApp:generateExpectResourceCollectorsForCommonMain
+> Task :core:common:parseDebugLocalResources UP-TO-DATE
+> Task :core:common:generateDebugRFile UP-TO-DATE
+> Task :core:design-system:parseDebugLocalResources FROM-CACHE
+> Task :composeApp:generateActualResourceCollectorsForAndroidMain
+> Task :feature:todo:processDebugManifest
+> Task :core:design-system:processDebugManifest
+> Task :core:network:processDebugManifest
+> Task :core:domain:parseDebugLocalResources FROM-CACHE
+> Task :core:model:parseDebugLocalResources FROM-CACHE
+> Task :composeApp:packageDevDebugResources
+> Task :core:domain:compileDebugLibraryResources
+> Task :core:navigation:compileDebugLibraryResources FROM-CACHE
+> Task :core:navigation:parseDebugLocalResources UP-TO-DATE
+> Task :core:navigation:generateDebugRFile UP-TO-DATE
+> Task :core:model:processDebugManifest
+> Task :core:network:compileDebugLibraryResources FROM-CACHE
+> Task :core:network:parseDebugLocalResources UP-TO-DATE
+> Task :core:network:generateDebugRFile UP-TO-DATE
+> Task :core:sync:compileDebugLibraryResources FROM-CACHE
+> Task :feature:todo:compileDebugLibraryResources FROM-CACHE
+> Task :core:sync:parseDebugLocalResources FROM-CACHE
+> Task :feature:todo:parseDebugLocalResources FROM-CACHE
+> Task :core:sync:generateDebugRFile
+> Task :core:common:kmpPartiallyResolvedDependenciesChecker
+> Task :core:common:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :core:common:compileDebugKotlinAndroid UP-TO-DATE
+> Task :core:common:javaPreCompileDebug UP-TO-DATE
+> Task :core:common:compileDebugJavaWithJavac NO-SOURCE
+> Task :core:common:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :core:design-system:kmpPartiallyResolvedDependenciesChecker
+> Task :core:design-system:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :core:design-system:generateResourceAccessorsForAndroidMain SKIPPED
+> Task :core:design-system:generateResourceAccessorsForCommonMain SKIPPED
+> Task :core:design-system:generateActualResourceCollectorsForAndroidMain SKIPPED
+> Task :core:design-system:generateComposeResClass SKIPPED
+> Task :core:design-system:generateExpectResourceCollectorsForCommonMain SKIPPED
+> Task :core:design-system:generateResourceAccessorsForAndroidDebug SKIPPED
+> Task :core:design-system:javaPreCompileDebug FROM-CACHE
+> Task :core:navigation:kmpPartiallyResolvedDependenciesChecker
+> Task :core:navigation:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :core:navigation:compileDebugKotlinAndroid UP-TO-DATE
+> Task :core:navigation:javaPreCompileDebug UP-TO-DATE
+> Task :core:navigation:compileDebugJavaWithJavac NO-SOURCE
+> Task :core:navigation:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :core:domain:kmpPartiallyResolvedDependenciesChecker
+> Task :core:domain:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :core:model:kmpPartiallyResolvedDependenciesChecker
+> Task :core:model:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :core:model:javaPreCompileDebug FROM-CACHE
+> Task :core:domain:javaPreCompileDebug FROM-CACHE
+> Task :core:network:kmpPartiallyResolvedDependenciesChecker
+> Task :core:network:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :core:network:compileDebugKotlinAndroid UP-TO-DATE
+> Task :core:network:javaPreCompileDebug UP-TO-DATE
+> Task :core:network:compileDebugJavaWithJavac NO-SOURCE
+> Task :core:network:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :core:sync:kmpPartiallyResolvedDependenciesChecker
+> Task :core:sync:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :core:sync:javaPreCompileDebug FROM-CACHE
+> Task :feature:todo:kmpPartiallyResolvedDependenciesChecker
+> Task :feature:todo:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :feature:todo:generateResourceAccessorsForAndroidMain SKIPPED
+> Task :feature:todo:generateResourceAccessorsForCommonMain SKIPPED
+> Task :feature:todo:generateActualResourceCollectorsForAndroidMain SKIPPED
+> Task :feature:todo:generateComposeResClass SKIPPED
+> Task :feature:todo:generateExpectResourceCollectorsForCommonMain SKIPPED
+> Task :feature:todo:generateResourceAccessorsForAndroidDebug SKIPPED
+> Task :feature:todo:javaPreCompileDebug FROM-CACHE
+> Task :composeApp:javaPreCompileDevDebug FROM-CACHE
+> Task :composeApp:mergeDevDebugShaders
+> Task :composeApp:compileDevDebugShaders NO-SOURCE
+> Task :composeApp:devDebugAssetsCopyForAGP NO-SOURCE
+> Task :composeApp:generateDevDebugAssets UP-TO-DATE
+> Task :core:domain:processDebugManifest
+> Task :core:common:debugAssetsCopyForAGP NO-SOURCE
+> Task :core:common:mergeDebugShaders
+> Task :core:common:compileDebugShaders NO-SOURCE
+> Task :core:common:generateDebugAssets UP-TO-DATE
+> Task :core:design-system:mergeDebugShaders
+> Task :core:common:compileDebugLibraryResources
+> Task :core:design-system:debugAssetsCopyForAGP NO-SOURCE
+> Task :core:design-system:compileDebugShaders NO-SOURCE
+> Task :core:design-system:generateDebugAssets UP-TO-DATE
+> Task :core:domain:mergeDebugShaders
+> Task :core:common:mergeDebugAssets
+> Task :core:design-system:mergeDebugAssets
+> Task :core:domain:compileDebugShaders NO-SOURCE
+> Task :core:domain:generateDebugAssets UP-TO-DATE
+> Task :core:domain:debugAssetsCopyForAGP NO-SOURCE
+> Task :core:model:debugAssetsCopyForAGP NO-SOURCE
+> Task :feature:todo:generateDebugRFile
+> Task :core:domain:generateDebugRFile
+> Task :core:navigation:debugAssetsCopyForAGP NO-SOURCE
+> Task :core:network:debugAssetsCopyForAGP NO-SOURCE
+> Task :core:model:mergeDebugShaders
+> Task :core:network:mergeDebugShaders
+> Task :core:sync:mergeDebugShaders
+> Task :core:domain:mergeDebugAssets
+> Task :core:model:compileDebugShaders NO-SOURCE
+> Task :core:model:generateDebugAssets UP-TO-DATE
+> Task :core:sync:debugAssetsCopyForAGP NO-SOURCE
+> Task :core:sync:compileDebugShaders NO-SOURCE
+> Task :core:sync:generateDebugAssets UP-TO-DATE
+> Task :core:network:compileDebugShaders NO-SOURCE
+> Task :core:network:generateDebugAssets UP-TO-DATE
+> Task :core:navigation:processDebugManifest
+> Task :feature:todo:debugAssetsCopyForAGP NO-SOURCE
+> Task :core:model:mergeDebugAssets
+> Task :core:navigation:mergeDebugShaders
+> Task :core:navigation:compileDebugShaders NO-SOURCE
+> Task :core:navigation:generateDebugAssets UP-TO-DATE
+> Task :core:design-system:compileDebugLibraryResources
+> Task :core:navigation:processDebugJavaRes UP-TO-DATE
+> Task :core:network:processDebugJavaRes UP-TO-DATE
+> Task :core:common:processDebugJavaRes UP-TO-DATE
+> Task :composeApp:desugarDevDebugFileDependencies
+> Task :core:design-system:generateDebugRFile
+> Task :core:sync:processDebugManifest
+> Task :core:navigation:mergeDebugAssets
+> Task :core:network:bundleLibRuntimeToDirDebug
+> Task :composeApp:mergeDevDebugJniLibFolders
+> Task :core:model:generateDebugRFile
+> Task :core:common:mergeDebugJniLibFolders
+> Task :core:common:mergeDebugNativeLibs NO-SOURCE
+> Task :feature:todo:mergeDebugShaders
+> Task :feature:todo:compileDebugShaders NO-SOURCE
+> Task :feature:todo:generateDebugAssets UP-TO-DATE
+> Task :composeApp:parseDevDebugLocalResources
+> Task :core:common:bundleLibRuntimeToDirDebug
+> Task :core:sync:mergeDebugAssets
+> Task :core:model:compileDebugLibraryResources
+> Task :core:design-system:mergeDebugJniLibFolders
+> Task :core:design-system:mergeDebugNativeLibs NO-SOURCE
+> Task :core:model:mergeDebugJniLibFolders
+> Task :core:domain:mergeDebugJniLibFolders
+> Task :core:domain:mergeDebugNativeLibs NO-SOURCE
+> Task :core:model:mergeDebugNativeLibs NO-SOURCE
+> Task :core:network:mergeDebugAssets
+> Task :core:navigation:mergeDebugJniLibFolders
+> Task :core:navigation:bundleLibRuntimeToDirDebug
+> Task :core:common:copyDebugJniLibsProjectOnly
+> Task :core:domain:copyDebugJniLibsProjectOnly
+> Task :core:navigation:mergeDebugNativeLibs NO-SOURCE
+> Task :core:network:mergeDebugJniLibFolders
+> Task :feature:todo:mergeDebugAssets
+> Task :core:navigation:copyDebugJniLibsProjectOnly
+> Task :core:network:mergeDebugNativeLibs NO-SOURCE
+> Task :composeApp:checkDevDebugAarMetadata
+> Task :core:network:copyDebugJniLibsProjectOnly
+> Task :composeApp:writeDevDebugAppMetadata
+> Task :core:design-system:copyDebugJniLibsProjectOnly
+> Task :composeApp:validateSigningDevDebug
+> Task :composeApp:writeDevDebugSigningConfigVersions
+> Task :core:common:processDebugManifest
+> Task :core:model:copyDebugJniLibsProjectOnly
+> Task :core:sync:mergeDebugJniLibFolders
+> Task :core:sync:mergeDebugNativeLibs NO-SOURCE
+> Task :feature:todo:mergeDebugJniLibFolders
+> Task :feature:todo:mergeDebugNativeLibs NO-SOURCE
+> Task :core:sync:copyDebugJniLibsProjectOnly
+> Task :feature:todo:copyDebugJniLibsProjectOnly
+> Task :composeApp:mapDevDebugSourceSetPaths
+> Task :composeApp:checkDevDebugDuplicateClasses
+> Task :composeApp:mergeDevDebugAssets
+> Task :composeApp:compressDevDebugAssets
+> Task :composeApp:processDevDebugMainManifest
+> Task :composeApp:processDevDebugManifest
+> Task :composeApp:processDevDebugManifestForPackage
+
+> Task :core:model:compileDebugKotlinAndroid
+w: file:///home/fajar/Documents/cmp/cmp-lagi/cmp-starter/core/model/src/commonMain/kotlin/com/fajar/kmp/core/model/Todo.kt:4:8 'typealias Instant = Instant' is deprecated. This type is deprecated in favor of `kotlin.time.Instant`.
+w: file:///home/fajar/Documents/cmp/cmp-lagi/cmp-starter/core/model/src/commonMain/kotlin/com/fajar/kmp/core/model/Todo.kt:17:23 'typealias Instant = Instant' is deprecated. This type is deprecated in favor of `kotlin.time.Instant`.
+
+> Task :core:model:compileDebugJavaWithJavac NO-SOURCE
+> Task :core:model:processDebugJavaRes
+> Task :core:model:bundleLibCompileToJarDebug
+> Task :core:domain:compileDebugKotlinAndroid NO-SOURCE
+> Task :core:domain:compileDebugJavaWithJavac NO-SOURCE
+> Task :core:domain:processDebugJavaRes NO-SOURCE
+> Task :core:domain:bundleLibCompileToJarDebug
+> Task :core:domain:bundleLibRuntimeToDirDebug
+> Task :core:model:bundleLibRuntimeToDirDebug
+> Task :composeApp:mergeDevDebugNativeLibs
+> Task :core:sync:compileDebugKotlinAndroid
+> Task :core:sync:compileDebugJavaWithJavac NO-SOURCE
+> Task :core:sync:bundleLibCompileToJarDebug
+> Task :core:sync:processDebugJavaRes
+> Task :composeApp:stripDevDebugDebugSymbols
+> Task :core:sync:bundleLibRuntimeToDirDebug
+> Task :composeApp:mergeDevDebugResources
+> Task :core:design-system:compileDebugKotlinAndroid
+> Task :core:design-system:compileDebugJavaWithJavac NO-SOURCE
+> Task :core:design-system:processDebugJavaRes
+> Task :core:design-system:bundleLibCompileToJarDebug
+> Task :core:design-system:bundleLibRuntimeToDirDebug
+> Task :composeApp:processDevDebugResources
+
+> Task :feature:todo:compileDebugKotlinAndroid
+w: file:///home/fajar/Documents/cmp/cmp-lagi/cmp-starter/feature/todo/src/commonMain/kotlin/com/fajar/kmp/feature/todo/data/mapper/TodoMappers.kt:7:8 'typealias Instant = Instant' is deprecated. This type is deprecated in favor of `kotlin.time.Instant`.
+w: file:///home/fajar/Documents/cmp/cmp-lagi/cmp-starter/feature/todo/src/commonMain/kotlin/com/fajar/kmp/feature/todo/data/mapper/TodoMappers.kt:17:55 'typealias Instant = Instant' is deprecated. This type is deprecated in favor of `kotlin.time.Instant`.
+
+> Task :feature:todo:compileDebugJavaWithJavac NO-SOURCE
+> Task :feature:todo:processDebugJavaRes
+> Task :feature:todo:bundleLibCompileToJarDebug
+> Task :feature:todo:bundleLibRuntimeToDirDebug
+> Task :composeApp:mergeLibDexDevDebug
+
+> Task :composeApp:compileDevDebugKotlinAndroid
+w: file:///home/fajar/Documents/cmp/cmp-lagi/cmp-starter/composeApp/src/androidMain/kotlin/com/fajar/kmp/AppRuntimeConfig.android.kt:6:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///home/fajar/Documents/cmp/cmp-lagi/cmp-starter/composeApp/src/commonMain/kotlin/com/fajar/kmp/AppRuntimeConfig.kt:5:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+
+> Task :composeApp:processDevDebugJavaRes
+> Task :composeApp:compileDevDebugJavaWithJavac
+> Task :composeApp:mergeExtDexDevDebug
+> Task :composeApp:mergeDevDebugJavaResource
+> Task :composeApp:dexBuilderDevDebug
+> Task :composeApp:mergeProjectDexDevDebug
+> Task :composeApp:packageDevDebug
+> Task :composeApp:assembleDevDebug
+> Task :composeApp:createDevDebugApkListingFileRedirect
+
+BUILD SUCCESSFUL in 47s
+200 actionable tasks: 138 executed, 31 from cache, 31 up-to-date
+Configuration cache entry stored.
+
+core_allTests_exit=0
+composeApp_assembleDevDebug_exit=0

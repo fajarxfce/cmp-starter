@@ -1,0 +1,102 @@
+Reusing configuration cache.
+> Task :core:common:preBuild UP-TO-DATE
+> Task :core:network:preBuild UP-TO-DATE
+> Task :core:common:preDebugBuild UP-TO-DATE
+> Task :core:network:preDebugBuild UP-TO-DATE
+> Task :core:network:iosSimulatorArm64ProcessResources NO-SOURCE
+> Task :core:network:desktopTestProcessResources NO-SOURCE
+> Task :core:network:desktopProcessResources NO-SOURCE
+> Task :core:common:desktopProcessResources NO-SOURCE
+> Task :core:common:exportCrossCompilationMetadataForIosSimulatorArm64ApiElements UP-TO-DATE
+> Task :core:common:kmpPartiallyResolvedDependenciesChecker
+> Task :core:network:kmpPartiallyResolvedDependenciesChecker
+> Task :core:common:processDesktopMainResources SKIPPED
+> Task :core:common:preReleaseBuild UP-TO-DATE
+> Task :core:common:javaPreCompileDebug UP-TO-DATE
+> Task :core:common:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :core:network:generateDebugResValues UP-TO-DATE
+> Task :core:network:javaPreCompileDebug UP-TO-DATE
+> Task :core:network:preReleaseBuild UP-TO-DATE
+> Task :core:common:downloadKotlinNativeDistribution UP-TO-DATE
+> Task :core:network:downloadKotlinNativeDistribution UP-TO-DATE
+> Task :core:network:generateReleaseResValues UP-TO-DATE
+> Task :core:network:preReleaseUnitTestBuild UP-TO-DATE
+> Task :core:network:generateDebugResources UP-TO-DATE
+> Task :core:network:javaPreCompileRelease UP-TO-DATE
+> Task :core:network:generateReleaseResources UP-TO-DATE
+> Task :core:network:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :core:network:javaPreCompileReleaseUnitTest UP-TO-DATE
+> Task :core:network:processDesktopMainResources SKIPPED
+> Task :core:common:javaPreCompileRelease UP-TO-DATE
+> Task :core:common:generateDebugResValues UP-TO-DATE
+> Task :core:network:preDebugUnitTestBuild UP-TO-DATE
+> Task :core:network:processDesktopTestResources SKIPPED
+> Task :core:common:generateReleaseResValues UP-TO-DATE
+> Task :core:network:packageDebugResources UP-TO-DATE
+> Task :core:common:generateDebugResources UP-TO-DATE
+> Task :core:network:packageReleaseResources UP-TO-DATE
+> Task :core:network:javaPreCompileDebugUnitTest UP-TO-DATE
+> Task :core:common:generateReleaseResources UP-TO-DATE
+> Task :core:common:compileKotlinDesktop UP-TO-DATE
+> Task :core:network:parseDebugLocalResources UP-TO-DATE
+> Task :core:network:parseReleaseLocalResources UP-TO-DATE
+> Task :core:common:packageDebugResources UP-TO-DATE
+> Task :core:common:compileDesktopMainJava NO-SOURCE
+> Task :core:common:packageReleaseResources UP-TO-DATE
+> Task :core:network:generateDebugRFile UP-TO-DATE
+> Task :core:common:desktopMainClasses UP-TO-DATE
+> Task :core:common:parseDebugLocalResources UP-TO-DATE
+> Task :core:network:generateReleaseRFile UP-TO-DATE
+> Task :core:common:desktopJar UP-TO-DATE
+> Task :core:common:parseReleaseLocalResources UP-TO-DATE
+> Task :core:common:generateDebugRFile UP-TO-DATE
+> Task :core:network:generateDebugUnitTestStubRFile UP-TO-DATE
+> Task :core:common:generateReleaseRFile UP-TO-DATE
+> Task :core:common:compileDebugKotlinAndroid UP-TO-DATE
+> Task :core:network:generateReleaseUnitTestStubRFile UP-TO-DATE
+> Task :core:common:compileDebugJavaWithJavac NO-SOURCE
+> Task :core:common:processDebugJavaRes UP-TO-DATE
+> Task :core:common:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :core:common:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :core:common:compileReleaseKotlinAndroid UP-TO-DATE
+> Task :core:common:compileReleaseJavaWithJavac NO-SOURCE
+> Task :core:common:processReleaseJavaRes UP-TO-DATE
+> Task :core:common:bundleLibRuntimeToJarRelease UP-TO-DATE
+> Task :core:common:bundleLibCompileToJarRelease UP-TO-DATE
+> Task :core:common:compileKotlinIosSimulatorArm64 UP-TO-DATE
+> Task :core:network:compileKotlinIosSimulatorArm64
+> Task :core:network:iosSimulatorArm64MainKlibrary
+> Task :core:network:compileDebugKotlinAndroid
+> Task :core:network:compileDebugJavaWithJavac NO-SOURCE
+> Task :core:network:processDebugJavaRes UP-TO-DATE
+> Task :core:network:bundleLibRuntimeToJarDebug
+> Task :core:network:bundleLibCompileToJarDebug
+> Task :core:network:compileKotlinDesktop
+> Task :core:network:compileDesktopMainJava NO-SOURCE
+> Task :core:network:desktopMainClasses
+> Task :core:network:compileReleaseKotlinAndroid
+> Task :core:network:compileReleaseJavaWithJavac NO-SOURCE
+> Task :core:network:processReleaseJavaRes UP-TO-DATE
+> Task :core:network:desktopJar
+> Task :core:network:bundleLibCompileToJarRelease
+> Task :core:network:bundleLibRuntimeToJarRelease
+> Task :core:network:compileTestKotlinIosSimulatorArm64
+> Task :core:network:linkDebugTestIosSimulatorArm64 SKIPPED
+> Task :core:network:iosSimulatorArm64Test SKIPPED
+> Task :core:network:compileTestKotlinDesktop
+> Task :core:network:compileDesktopTestJava NO-SOURCE
+> Task :core:network:desktopTestClasses
+> Task :core:network:compileReleaseUnitTestKotlinAndroid
+> Task :core:network:compileReleaseUnitTestJavaWithJavac NO-SOURCE
+> Task :core:network:compileDebugUnitTestKotlinAndroid
+> Task :core:network:processReleaseUnitTestJavaRes UP-TO-DATE
+> Task :core:network:processDebugUnitTestJavaRes UP-TO-DATE
+> Task :core:network:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :core:network:desktopTest
+> Task :core:network:testDebugUnitTest
+> Task :core:network:testReleaseUnitTest
+> Task :core:network:allTests
+
+BUILD SUCCESSFUL in 3s
+65 actionable tasks: 19 executed, 46 up-to-date
+Configuration cache entry reused.

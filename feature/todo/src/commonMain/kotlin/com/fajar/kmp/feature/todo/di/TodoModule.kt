@@ -1,5 +1,6 @@
 package com.fajar.kmp.feature.todo.di
 
+import com.fajar.kmp.core.network.NetworkMonitor
 import com.fajar.kmp.feature.todo.data.local.InMemoryTodoLocalDataSource
 import com.fajar.kmp.feature.todo.data.local.TodoLocalDataSource
 import com.fajar.kmp.feature.todo.data.remote.FakeTodoRemoteDataSource
@@ -14,20 +15,26 @@ import com.fajar.kmp.feature.todo.domain.usecase.ObserveTodosUseCase
 import com.fajar.kmp.feature.todo.domain.usecase.SyncTodosUseCase
 import com.fajar.kmp.feature.todo.domain.usecase.ToggleTodoUseCase
 import com.fajar.kmp.feature.todo.presentation.viewmodel.TodoViewModel
+import org.koin.dsl.module
 
-class TodoGraph {
-    private val localDataSource: TodoLocalDataSource = InMemoryTodoLocalDataSource()
-    private val remoteDataSource: TodoRemoteDataSource = FakeTodoRemoteDataSource()
-    private val syncManager = TodoSyncManager(localDataSource, remoteDataSource, AlwaysOnlineNetworkMonitor())
-    private val repository: TodoRepository = TodoRepositoryImpl(localDataSource, syncManager)
-
-    fun viewModel(): TodoViewModel = TodoViewModel(
-        observeTodos = ObserveTodosUseCase(repository),
-        addTodo = AddTodoUseCase(repository),
-        toggleTodo = ToggleTodoUseCase(repository),
-        deleteTodo = DeleteTodoUseCase(repository),
-        syncTodos = SyncTodosUseCase(repository),
-    )
+val todoModule = module {
+    single<TodoLocalDataSource> { InMemoryTodoLocalDataSource() }
+    single<TodoRemoteDataSource> { FakeTodoRemoteDataSource() }
+    single<NetworkMonitor> { AlwaysOnlineNetworkMonitor() }
+    single { TodoSyncManager(get<TodoLocalDataSource>(), get<TodoRemoteDataSource>(), get<NetworkMonitor>()) }
+    single<TodoRepository> { TodoRepositoryImpl(get<TodoLocalDataSource>(), get<TodoSyncManager>()) }
+    single { ObserveTodosUseCase(get<TodoRepository>()) }
+    single { AddTodoUseCase(get<TodoRepository>()) }
+    single { ToggleTodoUseCase(get<TodoRepository>()) }
+    single { DeleteTodoUseCase(get<TodoRepository>()) }
+    single { SyncTodosUseCase(get<TodoRepository>()) }
+    single {
+        TodoViewModel(
+            observeTodos = get<ObserveTodosUseCase>(),
+            addTodo = get<AddTodoUseCase>(),
+            toggleTodo = get<ToggleTodoUseCase>(),
+            deleteTodo = get<DeleteTodoUseCase>(),
+            syncTodos = get<SyncTodosUseCase>(),
+        )
+    }
 }
-
-fun todoModuleDescription(): String = "Koin-ready Todo module: data sources, repository, use cases, ViewModel"

@@ -1,0 +1,13 @@
+startKoin( search in changed Kotlin files:
+No literal startKoin( occurrences found; Koin startup uses Kotlin trailing-lambda syntax below.
+
+startKoin token search in changed Kotlin files:
+composeApp/src/commonMain/kotlin/com/fajar/kmp/di/AppKoin.kt:9: import org.koin.core.context.startKoin
+composeApp/src/commonMain/kotlin/com/fajar/kmp/di/AppKoin.kt:31: startKoin {
+composeApp/src/desktopTest/kotlin/com/fajar/kmp/di/KoinModuleVerificationTest.kt:13: import org.koin.core.context.startKoin
+composeApp/src/desktopTest/kotlin/com/fajar/kmp/di/KoinModuleVerificationTest.kt:26: val application = startKoin {
+
+AuthGraph symbol search in source/test Kotlin files:
+No AuthGraph symbols or instantiations remain in Kotlin source/test files.
+
+POS repository binding status: deferred to Task 6; productionAppModules(config, additionalModules) is the extension point for later repository modules.
