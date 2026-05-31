@@ -1,4 +1,4 @@
-package com.fajar.kmp.pos
+package com.fajar.kmp.feature.pos.presentation.shell
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

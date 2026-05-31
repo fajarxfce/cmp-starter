@@ -1,4 +1,4 @@
-package com.fajar.kmp.pos
+package com.fajar.kmp.feature.pos.presentation.shell
 
 data class PosShellState(
     val authStatus: String = "Not authenticated",

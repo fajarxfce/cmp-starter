@@ -1,3 +1,3 @@
 plugins {
-    id("cmp.compose.multiplatform.library")
+    alias(libs.plugins.cmpComposeMultiplatformLibrary)
 }

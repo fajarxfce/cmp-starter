@@ -1,4 +1,4 @@
-package com.fajar.kmp.pos
+package com.fajar.kmp.feature.pos.presentation.shell
 
 import com.fajar.kmp.core.network.data.AuthLoginRequest
 import com.fajar.kmp.core.network.data.AuthRegisterRequest

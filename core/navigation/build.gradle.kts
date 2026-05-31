@@ -1,7 +1,7 @@
 plugins {
-    id("cmp.kotlin.multiplatform.library")
-    id("cmp.serialization")
-    id("cmp.koin")
+    alias(libs.plugins.cmpDomain)
+    alias(libs.plugins.cmpSerialization)
+    alias(libs.plugins.cmpKoin)
 }
 
 kotlin {

@@ -1,7 +1,6 @@
 plugins {
-    id("cmp.kotlin.multiplatform.library")
-    id("cmp.test")
-    id("cmp.koin")
+    alias(libs.plugins.cmpFeature)
+    alias(libs.plugins.cmpKoin)
 }
 
 kotlin {
@@ -10,7 +9,7 @@ kotlin {
             implementation(projects.core.common)
             implementation(projects.core.datastore)
             implementation(projects.core.navigation)
-            implementation(libs.kotlinx.coroutines.core)
+            implementation(projects.core.designSystem)
         }
     }
 }

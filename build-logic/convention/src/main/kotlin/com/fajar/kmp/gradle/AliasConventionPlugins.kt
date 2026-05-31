@@ -23,6 +23,11 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
 class DomainModuleConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) = with(target) {
         pluginManager.apply("cmp.kotlin.multiplatform.library")
+        extensions.configure<KotlinMultiplatformExtension> {
+            sourceSets.commonMain.dependencies {
+                implementation(library("kotlinx-coroutines-core"))
+            }
+        }
     }
 }
 
@@ -42,6 +47,7 @@ class KoinConventionPlugin : Plugin<Project> {
         extensions.configure<KotlinMultiplatformExtension> {
             sourceSets.commonMain.dependencies {
                 implementation(library("koin-core"))
+                implementation(library("koin-compose"))
             }
             sourceSets.commonTest.dependencies {
                 implementation(library("koin-test"))

@@ -1,5 +1,5 @@
 plugins {
-    id("cmp.kotlin.multiplatform.library")
+    alias(libs.plugins.cmpDomain)
 }
 
 kotlin {

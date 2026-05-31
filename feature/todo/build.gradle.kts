@@ -1,6 +1,7 @@
 plugins {
-    id("cmp.feature")
-    id("cmp.serialization")
+    alias(libs.plugins.cmpFeature)
+    alias(libs.plugins.cmpSerialization)
+    alias(libs.plugins.cmpKoin)
 }
 
 kotlin {
@@ -14,8 +15,6 @@ kotlin {
             implementation(projects.core.sync)
             implementation(projects.core.network)
             implementation(libs.kotlinx.datetime)
-            implementation(libs.koin.core)
-            implementation(libs.koin.compose)
         }
     }
 }

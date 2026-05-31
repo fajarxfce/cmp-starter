@@ -1,12 +1,11 @@
 plugins {
-    id("cmp.kotlin.multiplatform.library")
+    alias(libs.plugins.cmpData)
 }
 
 kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(projects.core.model)
-            implementation(libs.kotlinx.coroutines.core)
         }
     }
 }

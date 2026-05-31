@@ -1,14 +1,14 @@
 plugins {
-    id("cmp.kotlin.multiplatform.library")
-    id("cmp.serialization")
-    id("cmp.koin")
+    alias(libs.plugins.cmpData)
+    alias(libs.plugins.cmpTest)
+    alias(libs.plugins.cmpSerialization)
+    alias(libs.plugins.cmpKoin)
 }
 
 kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(projects.core.common)
-            implementation(libs.kotlinx.coroutines.core)
             implementation(libs.ktor.client.auth)
             implementation(libs.ktor.client.contentNegotiation)
             implementation(libs.ktor.client.core)
@@ -16,7 +16,6 @@ kotlin {
             implementation(libs.ktor.serialization.kotlinxJson)
         }
         commonTest.dependencies {
-            implementation(libs.kotlinx.coroutines.test)
             implementation(libs.ktor.client.mock)
         }
         androidMain.dependencies {

@@ -1,7 +1,7 @@
 plugins {
-    id("cmp.kotlin.multiplatform.library")
-    id("cmp.test")
-    id("cmp.koin")
+    alias(libs.plugins.cmpData)
+    alias(libs.plugins.cmpTest)
+    alias(libs.plugins.cmpKoin)
 }
 
 kotlin {
@@ -9,7 +9,6 @@ kotlin {
         commonMain.dependencies {
             implementation(libs.androidx.datastore.core)
             implementation(libs.androidx.datastore.preferencesCore)
-            implementation(libs.kotlinx.coroutines.core)
         }
     }
 }

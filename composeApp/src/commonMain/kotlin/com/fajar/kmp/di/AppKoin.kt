@@ -9,7 +9,7 @@ import com.fajar.kmp.feature.auth.di.authModule
 import com.fajar.kmp.feature.pos.domain.repository.PosRepository
 import com.fajar.kmp.feature.pos.di.posModule
 import com.fajar.kmp.feature.todo.di.todoModule
-import com.fajar.kmp.pos.PosShellViewModel
+import com.fajar.kmp.feature.pos.presentation.shell.PosShellViewModel
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
 import org.koin.dsl.module

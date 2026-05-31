@@ -1,5 +1,5 @@
 plugins {
-    id("cmp.kotlin.multiplatform.library")
+    alias(libs.plugins.cmpDomain)
 }
 
 kotlin {
@@ -7,7 +7,6 @@ kotlin {
         commonMain.dependencies {
             implementation(projects.core.model)
             implementation(projects.core.common)
-            implementation(libs.kotlinx.coroutines.core)
         }
     }
 }

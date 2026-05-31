@@ -41,6 +41,8 @@ class ComposeMultiplatformApplicationConventionPlugin : Plugin<Project> {
                 implementation(library("kotlinx-collections-immutable"))
                 implementation(library("kotlinx-serialization-json"))
                 implementation(library("koin-core"))
+                implementation(library("koin-compose"))
+                implementation(library("koin-compose-viewmodel"))
             }
             sourceSets.commonTest.dependencies {
                 implementation(library("kotlin-test"))

@@ -2,8 +2,8 @@ package com.fajar.kmp.gradle
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.gradle.kotlin.dsl.configure
+import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
 class ComposeMultiplatformLibraryConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) = with(target) {
@@ -17,6 +17,7 @@ class ComposeMultiplatformLibraryConventionPlugin : Plugin<Project> {
                 implementation(library("compose-foundation"))
                 implementation(library("compose-material3"))
                 implementation(library("compose-ui"))
+                implementation(library("compose-uiToolingPreview"))
             }
         }
     }

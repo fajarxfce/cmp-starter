@@ -73,3 +73,12 @@ composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "composeMul
 composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+cmpComposeMultiplatformApplication = { id = "cmp.compose.multiplatform.application" }
+cmpComposeMultiplatformLibrary = { id = "cmp.compose.multiplatform.library" }
+cmpData = { id = "cmp.data" }
+cmpDomain = { id = "cmp.domain" }
+cmpFeature = { id = "cmp.feature" }
+cmpKoin = { id = "cmp.koin" }
+cmpSerialization = { id = "cmp.serialization" }
+cmpTest = { id = "cmp.test" }
+

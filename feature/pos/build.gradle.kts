@@ -1,8 +1,7 @@
 plugins {
-    id("cmp.kotlin.multiplatform.library")
-    id("cmp.test")
-    id("cmp.serialization")
-    id("cmp.koin")
+    alias(libs.plugins.cmpFeature)
+    alias(libs.plugins.cmpSerialization)
+    alias(libs.plugins.cmpKoin)
 }
 
 kotlin {
@@ -10,7 +9,9 @@ kotlin {
         commonMain.dependencies {
             implementation(projects.core.datastore)
             implementation(projects.core.network)
-            implementation(libs.kotlinx.coroutines.core)
+            implementation(projects.core.designSystem)
+            implementation(projects.core.navigation)
+            implementation(libs.androidx.lifecycle.viewmodelCompose)
         }
     }
 }
