@@ -1,6 +1,7 @@
 package com.fajar.kmp
 
 import com.fajar.kmp.core.common.AppFlavor
+import com.fajar.kmp.core.common.ProxyConfig
 import com.fajar.kmp.core.common.StaticAppConfig
 
 actual object AppRuntimeConfig {
@@ -11,5 +12,6 @@ actual object AppRuntimeConfig {
         isMockModeEnabled = false,
         isAnalyticsEnabled = false,
         flavor = AppFlavor.Dev,
+        proxy = ProxyConfig(),
     )
 }

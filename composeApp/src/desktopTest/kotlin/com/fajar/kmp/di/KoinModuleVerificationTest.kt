@@ -2,6 +2,7 @@ package com.fajar.kmp.di
 
 import com.fajar.kmp.core.common.AppConfig
 import com.fajar.kmp.core.common.AppFlavor
+import com.fajar.kmp.core.common.ProxyConfig
 import com.fajar.kmp.core.datastore.SessionPreferences
 import com.fajar.kmp.core.navigation.AppNavigator
 import com.fajar.kmp.core.network.ApiClient
@@ -55,6 +56,7 @@ class KoinModuleVerificationTest {
             override val isMockModeEnabled: Boolean = false
             override val isAnalyticsEnabled: Boolean = false
             override val flavor: AppFlavor = AppFlavor.Dev
+            override val proxy: ProxyConfig = ProxyConfig()
         }
     }
 }

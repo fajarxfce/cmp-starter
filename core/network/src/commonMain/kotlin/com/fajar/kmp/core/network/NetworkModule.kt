@@ -8,11 +8,13 @@ val networkModule = module {
     single<NetworkMonitor> { StaticNetworkMonitor(online = true) }
     single<BearerTokenProvider> { BearerTokenProvider { null } }
     single<ApiClient> {
+        val config = get<AppConfig>()
         KtorApiClient(
-            baseUrl = get<AppConfig>().baseUrl,
+            baseUrl = config.baseUrl,
             networkMonitor = get(),
             bearerTokenProvider = get(),
             errorMapper = get(),
+            proxyUrl = config.proxy.url,
         )
     }
 }

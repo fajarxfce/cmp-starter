@@ -7,6 +7,16 @@ interface AppConfig {
     val isMockModeEnabled: Boolean
     val isAnalyticsEnabled: Boolean
     val flavor: AppFlavor
+    val proxy: ProxyConfig
+}
+
+data class ProxyConfig(
+    val enabled: Boolean = false,
+    val host: String = "",
+    val port: Int = 0,
+) {
+    val url: String?
+        get() = if (enabled && host.isNotBlank() && port > 0) "http://$host:$port" else null
 }
 
 enum class AppFlavor {
@@ -22,4 +32,5 @@ data class StaticAppConfig(
     override val isMockModeEnabled: Boolean,
     override val isAnalyticsEnabled: Boolean,
     override val flavor: AppFlavor,
+    override val proxy: ProxyConfig = ProxyConfig(),
 ) : AppConfig

@@ -58,28 +58,50 @@ class ComposeMultiplatformApplicationConventionPlugin : Plugin<Project> {
             }
             flavorDimensions += "environment"
             productFlavors {
+                fun com.android.build.api.dsl.ApplicationProductFlavor.configureRuntime(
+                    baseUrl: String,
+                    flavorName: String,
+                    mockMode: Boolean,
+                    proxyEnabled: Boolean = false,
+                    proxyHost: String = "10.144.0.185",
+                    proxyPort: Int = 6969,
+                ) {
+                    buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
+                    buildConfigField("String", "FLAVOR_NAME", "\"$flavorName\"")
+                    buildConfigField("Boolean", "MOCK_MODE", mockMode.toString())
+                    buildConfigField("Boolean", "PROXY_ENABLED", proxyEnabled.toString())
+                    buildConfigField("String", "PROXY_HOST", "\"$proxyHost\"")
+                    buildConfigField("String", "PROXY_PORT", "\"$proxyPort\"")
+                }
+
                 create("dev") {
                     dimension = "environment"
                     applicationIdSuffix = ".dev"
-                    resValue("string", "app_name", "CMP Starter Dev")
-                    buildConfigField("String", "BASE_URL", "\"http://10.144.0.185:8080\"")
-                    buildConfigField("String", "FLAVOR_NAME", "\"dev\"")
-                    buildConfigField("Boolean", "MOCK_MODE", "true")
+                    resValue("string", "app_name", "Kasir POS Dev")
+                    configureRuntime(baseUrl = "http://10.144.0.185:8080", flavorName = "dev", mockMode = true)
+                }
+                create("devProxy") {
+                    dimension = "environment"
+                    applicationIdSuffix = ".dev.proxy"
+                    resValue("string", "app_name", "Kasir POS Dev Proxy")
+                    configureRuntime(baseUrl = "http://10.144.0.185:8080", flavorName = "devProxy", mockMode = true, proxyEnabled = true)
                 }
                 create("staging") {
                     dimension = "environment"
                     applicationIdSuffix = ".staging"
-                    resValue("string", "app_name", "CMP Starter Staging")
-                    buildConfigField("String", "BASE_URL", "\"http://10.144.0.185:8080\"")
-                    buildConfigField("String", "FLAVOR_NAME", "\"staging\"")
-                    buildConfigField("Boolean", "MOCK_MODE", "false")
+                    resValue("string", "app_name", "Kasir POS Staging")
+                    configureRuntime(baseUrl = "http://10.144.0.185:8080", flavorName = "staging", mockMode = false)
                 }
                 create("prod") {
                     dimension = "environment"
-                    resValue("string", "app_name", "CMP Starter")
-                    buildConfigField("String", "BASE_URL", "\"http://10.144.0.185:8080\"")
-                    buildConfigField("String", "FLAVOR_NAME", "\"prod\"")
-                    buildConfigField("Boolean", "MOCK_MODE", "false")
+                    resValue("string", "app_name", "Kasir POS")
+                    configureRuntime(baseUrl = "http://10.144.0.185:8080", flavorName = "prod", mockMode = false)
+                }
+                create("prodProxy") {
+                    dimension = "environment"
+                    applicationIdSuffix = ".prod.proxy"
+                    resValue("string", "app_name", "Kasir POS Proxy")
+                    configureRuntime(baseUrl = "http://10.144.0.185:8080", flavorName = "prodProxy", mockMode = false, proxyEnabled = true)
                 }
             }
             buildFeatures.buildConfig = true

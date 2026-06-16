@@ -6,6 +6,7 @@ import io.ktor.client.HttpClientConfig
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.HttpClientEngineConfig
 import io.ktor.client.engine.HttpClientEngineFactory
+import io.ktor.client.engine.ProxyBuilder
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.LogLevel
@@ -39,12 +40,13 @@ class KtorApiClient private constructor(
         bearerTokenProvider: BearerTokenProvider = BearerTokenProvider { null },
         errorMapper: NetworkErrorMapper = NetworkErrorMapper(),
         requestTimeoutMillis: Long = DefaultRequestTimeoutMillis,
+        proxyUrl: String? = null,
     ) : this(
         baseUrl = normalizeBaseUrl(baseUrl),
         networkMonitor = networkMonitor,
         bearerTokenProvider = bearerTokenProvider,
         errorMapper = errorMapper,
-        client = buildHttpClient(platformHttpClientEngineFactory(), requestTimeoutMillis),
+        client = buildHttpClient(platformHttpClientEngineFactory(), requestTimeoutMillis, proxyUrl),
     )
 
     internal constructor(
@@ -107,10 +109,16 @@ class KtorApiClient private constructor(
 private const val DefaultRequestTimeoutMillis = 15_000L
 private const val IdempotencyKeyHeader = "Idempotency-Key"
 
-private fun buildHttpClient(engineFactory: HttpClientEngineFactory<*>, requestTimeoutMillis: Long): HttpClient =
-    HttpClient(engineFactory) {
-        configureKtorClient(requestTimeoutMillis)
+private fun buildHttpClient(
+    engineFactory: HttpClientEngineFactory<*>,
+    requestTimeoutMillis: Long,
+    proxyUrl: String?,
+): HttpClient = HttpClient(engineFactory) {
+    engine {
+        proxyUrl?.let { proxy = ProxyBuilder.http(Url(it)) }
     }
+    configureKtorClient(requestTimeoutMillis)
+}
 
 private fun buildHttpClient(engine: HttpClientEngine, requestTimeoutMillis: Long): HttpClient =
     HttpClient(engine) {
