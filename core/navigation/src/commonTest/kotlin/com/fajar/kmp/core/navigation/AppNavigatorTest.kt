@@ -55,19 +55,17 @@ class AppNavigatorTest {
     }
 
     @Test
-    fun home_sections_push_and_back_to_dashboard_without_emptying_root() {
+    fun home_tabs_replace_root_instead_of_pushing_back_stack() {
         val navigator = AppNavigator(AppRoute.Dashboard)
 
-        navigator.openHomeRoute(AppRoute.Catalog)
-        navigator.openHomeRoute(AppRoute.Checkout)
-        navigator.openHomeRoute(AppRoute.Sync)
-        navigator.openHomeRoute(AppRoute.Admin)
-        navigator.goBack()
-        navigator.goBack()
-        navigator.goBack()
-        navigator.goBack()
-        navigator.goBack()
+        navigator.selectHomeTab(AppRoute.Catalog)
+        assertEquals(listOf(AppRoute.Catalog), navigator.backStack)
 
-        assertEquals(listOf(AppRoute.Dashboard), navigator.backStack)
+        navigator.selectHomeTab(AppRoute.Checkout)
+        assertEquals(listOf(AppRoute.Checkout), navigator.backStack)
+
+        navigator.selectHomeTab(AppRoute.Admin)
+        assertEquals(listOf(AppRoute.Admin), navigator.backStack)
+        assertEquals(false, navigator.goBack())
     }
 }

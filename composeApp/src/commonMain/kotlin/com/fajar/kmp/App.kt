@@ -41,25 +41,27 @@ fun App() {
             backStack += navigator.backStack
         }
 
-        LaunchedEffect(Unit) {
-            delay(900)
-            if (navigator.currentRoute == AppRoute.Splash) {
-                navigator.goToOnboarding()
-                syncBackStack()
+        LaunchedEffect(shellState.isSessionLoaded, shellState.isAuthenticated, shellState.hasActiveStore) {
+            if (!shellState.isSessionLoaded || navigator.currentRoute != AppRoute.Splash) return@LaunchedEffect
+            delay(600)
+            when {
+                !shellState.isAuthenticated -> navigator.goToOnboarding()
+                !shellState.hasActiveStore -> navigator.completeAuthentication(hasActiveStore = false)
+                else -> navigator.completeAuthentication(hasActiveStore = true)
             }
+            syncBackStack()
         }
 
-        LaunchedEffect(shellState.authStatus) {
-            if (shellState.authStatus == "Authenticated" || shellState.authStatus == "Registered") {
-                navigator.completeAuthentication(hasActiveStore = false)
-                syncBackStack()
-            }
-        }
-
-        LaunchedEffect(shellState.storeStatus) {
-            if (shellState.storeStatus.startsWith("Store registered:")) {
-                navigator.completeStoreSetup()
-                syncBackStack()
+        LaunchedEffect(shellState.isAuthenticated, shellState.hasActiveStore) {
+            when {
+                shellState.isAuthenticated && shellState.hasActiveStore && navigator.currentRoute == AppRoute.StoreSetup -> {
+                    navigator.completeStoreSetup()
+                    syncBackStack()
+                }
+                shellState.isAuthenticated && !shellState.hasActiveStore && navigator.currentRoute == AppRoute.Login -> {
+                    navigator.completeAuthentication(hasActiveStore = false)
+                    syncBackStack()
+                }
             }
         }
 
@@ -101,24 +103,21 @@ fun App() {
                         AppRoute.StoreSetup -> StoreSetupScreen(
                             storeStatus = shellState.storeStatus,
                             isStoreLoading = shellState.isStoreLoading,
-                            onContinue = { request ->
-                            viewModel.registerStore(request)
-                            navigator.completeStoreSetup()
-                            syncBackStack()
-                        },
+                            onContinue = { request -> viewModel.registerStore(request) },
                         )
                         AppRoute.Dashboard, AppRoute.Catalog, AppRoute.Checkout, AppRoute.Sync, AppRoute.Admin -> HomeScreen(
                             route = route,
                             state = shellState,
-                            onLoadCatalog = { viewModel.loadCatalog(DefaultStoreId) },
-                            onCheckout = { viewModel.checkout(DefaultStoreId, defaultTransactionRequest()) },
-                            onSync = { viewModel.sync(DefaultStoreId, SyncRequest(lastSyncTimestamp = DefaultSyncTimestamp)) },
+                            onLoadCatalog = { viewModel.loadCatalog(shellState.activeStoreId ?: DefaultStoreId) },
+                            onCheckout = { viewModel.checkout(shellState.activeStoreId ?: DefaultStoreId, defaultTransactionRequest()) },
+                            onSync = { viewModel.sync(shellState.activeStoreId ?: DefaultStoreId, SyncRequest(lastSyncTimestamp = DefaultSyncTimestamp)) },
                             onLoadAdmin = { viewModel.loadAdmin() },
                             onNavigate = {
-                                navigator.openHomeRoute(it)
+                                navigator.selectHomeTab(it)
                                 syncBackStack()
                             },
                             onLogout = {
+                                viewModel.logout()
                                 navigator.logout()
                                 syncBackStack()
                             },
@@ -126,15 +125,16 @@ fun App() {
                         is AppRoute.ProductDetail -> HomeScreen(
                             route = AppRoute.Catalog,
                             state = shellState,
-                            onLoadCatalog = { viewModel.loadCatalog(DefaultStoreId) },
-                            onCheckout = { viewModel.checkout(DefaultStoreId, defaultTransactionRequest()) },
-                            onSync = { viewModel.sync(DefaultStoreId, SyncRequest(lastSyncTimestamp = DefaultSyncTimestamp)) },
+                            onLoadCatalog = { viewModel.loadCatalog(shellState.activeStoreId ?: DefaultStoreId) },
+                            onCheckout = { viewModel.checkout(shellState.activeStoreId ?: DefaultStoreId, defaultTransactionRequest()) },
+                            onSync = { viewModel.sync(shellState.activeStoreId ?: DefaultStoreId, SyncRequest(lastSyncTimestamp = DefaultSyncTimestamp)) },
                             onLoadAdmin = { viewModel.loadAdmin() },
                             onNavigate = {
-                                navigator.openHomeRoute(it)
+                                navigator.selectHomeTab(it)
                                 syncBackStack()
                             },
                             onLogout = {
+                                viewModel.logout()
                                 navigator.logout()
                                 syncBackStack()
                             },

@@ -1,8 +1,12 @@
 package com.fajar.kmp.feature.pos.presentation.shell
 
 data class PosShellState(
-    val authStatus: String = "Not authenticated",
-    val storeStatus: String = "No store registered",
+    val isSessionLoaded: Boolean = false,
+    val isAuthenticated: Boolean = false,
+    val hasActiveStore: Boolean = false,
+    val activeStoreId: String? = null,
+    val authStatus: String = "Belum masuk",
+    val storeStatus: String = "Belum ada toko aktif",
     val catalogStatus: String = "Catalog not loaded",
     val checkoutStatus: String = "No checkout yet",
     val syncStatus: String = "Not synced",

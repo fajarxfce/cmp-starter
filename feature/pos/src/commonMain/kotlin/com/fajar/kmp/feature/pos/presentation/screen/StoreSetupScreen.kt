@@ -72,30 +72,30 @@ fun StoreSetupScreen(storeStatus: String,
     var phone by rememberSaveable { mutableStateOf("081234567890") }
 
     PosPage {
-        BrandHeader("Store Management /api/v1/stores/register")
+        BrandHeader("Profil toko")
         PosCard(padding = PaddingValues(18.dp)) {
-            Text("Setup toko", color = PosPalette.Ink, fontSize = 25.sp, fontWeight = FontWeight.Black)
-            Text("Store menjadi scope untuk catalog, transaction, dan sync.", color = PosPalette.Slate, fontSize = 13.sp)
+            Text("Lengkapi toko Anda", color = PosPalette.Ink, fontSize = 25.sp, fontWeight = FontWeight.Black)
+            Text("Informasi ini dipakai di struk, katalog, dan laporan penjualan.", color = PosPalette.Slate, fontSize = 13.sp)
             Spacer(Modifier.height(16.dp))
-            PosTextField(name, { name = it }, "Store name")
+            PosTextField(name, { name = it }, "Nama toko")
             Spacer(Modifier.height(10.dp))
-            PosTextField(slug, { slug = it }, "Slug")
+            PosTextField(slug, { slug = it }, "Alamat singkat toko")
             Spacer(Modifier.height(10.dp))
-            PosTextField(description, { description = it }, "Description")
+            PosTextField(description, { description = it }, "Deskripsi toko")
             Spacer(Modifier.height(10.dp))
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                PosDropdown("Timezone", timezone, listOf("Asia/Jakarta", "Asia/Makassar", "Asia/Jayapura"), { timezone = it }, Modifier.weight(1f))
-                PosDropdown("Country", country, listOf("ID", "SG", "MY"), { country = it }, Modifier.weight(1f))
+                PosDropdown("Zona waktu", timezone, listOf("Asia/Jakarta", "Asia/Makassar", "Asia/Jayapura"), { timezone = it }, Modifier.weight(1f))
+                PosDropdown("Negara", country, listOf("ID", "SG", "MY"), { country = it }, Modifier.weight(1f))
             }
             Spacer(Modifier.height(10.dp))
-            PosTextField(phone, { phone = it }, "Phone", keyboardType = KeyboardType.Phone)
+            PosTextField(phone, { phone = it }, "Nomor telepon", keyboardType = KeyboardType.Phone)
             Spacer(Modifier.height(10.dp))
-            PosTextField(email, { email = it }, "Store email", keyboardType = KeyboardType.Email)
+            PosTextField(email, { email = it }, "Email toko", keyboardType = KeyboardType.Email)
             Spacer(Modifier.height(18.dp))
-            StatusRow("Store", storeStatus, isStoreLoading)
+            StatusRow("Toko", storeStatus, isStoreLoading)
             Spacer(Modifier.height(12.dp))
             PosButton(
-                "Buka dashboard toko",
+                "Simpan dan buka toko",
                 {
                     onContinue(
                         StoreRegisterRequest(
@@ -131,7 +131,7 @@ private fun BrandHeader(label: String) {
         LogoMark(44.dp)
         Spacer(Modifier.width(12.dp))
         Column(Modifier.weight(1f)) {
-            Text("POS-GG", color = PosPalette.Ink, fontSize = 26.sp, fontWeight = FontWeight.Black)
+            Text("Kasir POS", color = PosPalette.Ink, fontSize = 26.sp, fontWeight = FontWeight.Black)
             Text(label, color = PosPalette.Slate, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
         }
     }

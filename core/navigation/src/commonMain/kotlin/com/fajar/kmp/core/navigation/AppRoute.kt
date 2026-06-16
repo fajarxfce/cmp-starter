@@ -62,14 +62,9 @@ class AppNavigator(startRoute: AppRoute = AppRoute.Splash) {
 
     fun logout() = replaceAll(AppRoute.Login)
 
-    fun openHomeRoute(route: AppRoute) {
+    fun selectHomeTab(route: AppRoute) {
         require(route.isHomeRoute) { "Route $route is not a home route" }
-        if (currentRoute == route) return
-        if (currentRoute == AppRoute.Dashboard) {
-            routeStack += route
-        } else {
-            routeStack[routeStack.lastIndex] = route
-        }
+        replaceAll(route)
     }
 
     fun goBack(): Boolean {
@@ -90,12 +85,12 @@ val AppRoute.displayTitle: String
         AppRoute.Onboarding -> "Onboarding"
         AppRoute.Login -> "Login"
         AppRoute.Register -> "Register"
-        AppRoute.StoreSetup -> "Store setup"
-        AppRoute.Dashboard -> "Dashboard"
-        AppRoute.Catalog -> "Catalog"
-        AppRoute.Checkout -> "Checkout"
+        AppRoute.StoreSetup -> "Setup toko"
+        AppRoute.Dashboard -> "Beranda"
+        AppRoute.Catalog -> "Katalog"
+        AppRoute.Checkout -> "Kasir"
         AppRoute.Sync -> "Sync"
-        AppRoute.Admin -> "Admin"
+        AppRoute.Admin -> "Toko"
         is AppRoute.ProductDetail -> "Product detail"
     }
 

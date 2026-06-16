@@ -70,22 +70,22 @@ fun AuthScreen(
     onModeChange: (AuthMode) -> Unit,
     onSubmit: (String, String, String, String, String) -> Unit,
 ) {
-    var fullName by rememberSaveable { mutableStateOf("Admin POS") }
+    var fullName by rememberSaveable { mutableStateOf("Nama pemilik toko") }
     var email by rememberSaveable { mutableStateOf("admin@posgg.dev") }
     var password by rememberSaveable { mutableStateOf("adminpass123") }
     var phone by rememberSaveable { mutableStateOf("") }
     var tenant by rememberSaveable { mutableStateOf("") }
 
     PosPage {
-        BrandHeader(if (mode == AuthMode.Login) "Login /api/v1/auth/login" else "Register /api/v1/auth/register")
+        BrandHeader(if (mode == AuthMode.Login) "Masuk ke toko" else "Buat akun toko")
         PosCard(padding = PaddingValues(18.dp)) {
-            Text(if (mode == AuthMode.Login) "Masuk ke tenant" else "Daftarkan user baru", color = PosPalette.Ink, fontSize = 25.sp, fontWeight = FontWeight.Black)
-            Text("Payload disesuaikan dari collection POS-GG.", color = PosPalette.Slate, fontSize = 13.sp)
+            Text(if (mode == AuthMode.Login) "Selamat datang kembali" else "Buat akun untuk toko Anda", color = PosPalette.Ink, fontSize = 25.sp, fontWeight = FontWeight.Black)
+            Text("Gunakan email dan password untuk mengakses dashboard toko.", color = PosPalette.Slate, fontSize = 13.sp)
             Spacer(Modifier.height(16.dp))
-            PosSegmentedControl(listOf("Login", "Register"), if (mode == AuthMode.Login) "Login" else "Register", { onModeChange(if (it == "Login") AuthMode.Login else AuthMode.Register) }, Modifier.fillMaxWidth())
+            PosSegmentedControl(listOf("Masuk", "Daftar"), if (mode == AuthMode.Login) "Masuk" else "Daftar", { onModeChange(if (it == "Masuk") AuthMode.Login else AuthMode.Register) }, Modifier.fillMaxWidth())
             Spacer(Modifier.height(14.dp))
             if (mode == AuthMode.Register) {
-                PosTextField(fullName, { fullName = it }, "Full name", placeholder = "Admin POS")
+                PosTextField(fullName, { fullName = it }, "Nama lengkap", placeholder = "Nama pemilik toko")
                 Spacer(Modifier.height(10.dp))
             }
             PosTextField(email, { email = it }, "Email", placeholder = "admin@posgg.dev", keyboardType = KeyboardType.Email)
@@ -93,15 +93,15 @@ fun AuthScreen(
             PosTextField(password, { password = it }, "Password", placeholder = "adminpass123", isPassword = true)
             if (mode == AuthMode.Register) {
                 Spacer(Modifier.height(10.dp))
-                PosTextField(phone, { phone = it }, "Phone (optional)", placeholder = "081234567890", keyboardType = KeyboardType.Phone)
+                PosTextField(phone, { phone = it }, "Nomor HP opsional", placeholder = "081234567890", keyboardType = KeyboardType.Phone)
                 Spacer(Modifier.height(10.dp))
-                PosTextField(tenant, { tenant = it }, "Tenant ID (optional)", placeholder = "auto assign")
+                PosTextField(tenant, { tenant = it }, "Kode tenant opsional", placeholder = "dibuat otomatis")
             }
             Spacer(Modifier.height(18.dp))
-            StatusRow("Auth", authStatus, isAuthLoading)
+            StatusRow("Akun", authStatus, isAuthLoading)
             Spacer(Modifier.height(12.dp))
             PosButton(
-                if (mode == AuthMode.Login) "Login dan lanjut setup" else "Register dan lanjut setup",
+                if (mode == AuthMode.Login) "Masuk dan lanjut setup" else "Daftar dan lanjut setup",
                 { onSubmit(fullName, email, password, phone, tenant) },
                 Modifier.fillMaxWidth(),
                 enabled = !isAuthLoading,
@@ -125,7 +125,7 @@ private fun BrandHeader(label: String) {
         LogoMark(44.dp)
         Spacer(Modifier.width(12.dp))
         Column(Modifier.weight(1f)) {
-            Text("POS-GG", color = PosPalette.Ink, fontSize = 26.sp, fontWeight = FontWeight.Black)
+            Text("Kasir POS", color = PosPalette.Ink, fontSize = 26.sp, fontWeight = FontWeight.Black)
             Text(label, color = PosPalette.Slate, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
         }
     }

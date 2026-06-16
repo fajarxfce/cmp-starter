@@ -21,7 +21,7 @@ fun appConfigModule(config: AppConfig) = module {
 
 val appPosShellModule = module {
     includes(posModule)
-    factory { PosShellViewModel(get<PosRepository>()) }
+    factory { PosShellViewModel(repository = get<PosRepository>(), sessionPreferences = get()) }
 }
 
 fun productionAppModules(

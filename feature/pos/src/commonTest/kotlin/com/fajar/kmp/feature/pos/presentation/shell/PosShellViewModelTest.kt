@@ -24,7 +24,7 @@ class PosShellViewModelTest {
         viewModel.login("user@example.com", "bad-password")
         advanceUntilIdle()
 
-        assertEquals("Unauthorized", viewModel.state.value.authStatus)
+        assertEquals("Email atau password belum sesuai", viewModel.state.value.authStatus)
         assertFalse(viewModel.state.value.isAuthLoading)
     }
 
@@ -46,7 +46,7 @@ class PosShellViewModelTest {
         viewModel.registerStore(storeRequest())
         advanceUntilIdle()
 
-        assertEquals("Store registered: store-1", viewModel.state.value.storeStatus)
+        assertEquals("Toko siap digunakan", viewModel.state.value.storeStatus)
         assertFalse(viewModel.state.value.isStoreLoading)
     }
 
@@ -70,7 +70,7 @@ class PosShellViewModelTest {
         emptyViewModel.loadCatalog("store-1")
         advanceUntilIdle()
 
-        assertEquals("Catalog empty", emptyViewModel.state.value.catalogStatus)
+        assertEquals("Belum ada produk", emptyViewModel.state.value.catalogStatus)
 
         val errorViewModel = PosShellViewModel(
             FakePosRepository(listProductsResult = PosResult.Failure(PosError.Network("Catalog offline"))),
@@ -89,7 +89,7 @@ class PosShellViewModelTest {
         successViewModel.checkout("store-1", transactionRequest())
         advanceUntilIdle()
 
-        assertEquals("Checkout complete: txn-1", successViewModel.state.value.checkoutStatus)
+        assertEquals("Transaksi berhasil disimpan", successViewModel.state.value.checkoutStatus)
 
         val failureViewModel = PosShellViewModel(
             FakePosRepository(createTransactionResult = PosResult.Failure(PosError.MissingData("Cart is empty"))),
@@ -123,7 +123,7 @@ class PosShellViewModelTest {
         viewModel.loadAdmin()
         advanceUntilIdle()
 
-        assertEquals("Unauthorized", viewModel.state.value.adminStatus)
+        assertEquals("Email atau password belum sesuai", viewModel.state.value.adminStatus)
         assertFalse(viewModel.state.value.isAdminLoading)
     }
 }

@@ -5,10 +5,10 @@ import com.fajar.kmp.core.common.StaticAppConfig
 
 actual object AppRuntimeConfig {
     actual val config: StaticAppConfig = StaticAppConfig(
-        baseUrl = "REPLACE_WITH_DESKTOP_BASE_URL",
-        appName = "CMP Starter Desktop",
+        baseUrl = "http://10.60.40.185:8080",
+        appName = "Kasir POS Desktop",
         isDebugLoggingEnabled = true,
-        isMockModeEnabled = true,
+        isMockModeEnabled = false,
         isAnalyticsEnabled = false,
         flavor = AppFlavor.Dev,
     )

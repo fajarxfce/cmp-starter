@@ -2,6 +2,7 @@ package com.fajar.kmp.feature.pos.presentation.shell
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fajar.kmp.core.datastore.SessionPreferences
 import com.fajar.kmp.core.network.data.AuthLoginRequest
 import com.fajar.kmp.core.network.data.AuthRegisterRequest
 import com.fajar.kmp.core.network.data.StoreRegisterRequest
@@ -20,16 +21,21 @@ import kotlinx.coroutines.launch
 class PosShellViewModel(
     private val repository: PosRepository,
     private val coroutineScope: CoroutineScope? = null,
+    private val sessionPreferences: SessionPreferences? = null,
 ) : ViewModel() {
     private val _state = MutableStateFlow(PosShellState())
     val state: StateFlow<PosShellState> = _state.asStateFlow()
+
+    init {
+        hydrateSession()
+    }
 
     fun login(email: String, password: String) {
         launchShellUpdate {
             _state.update { it.copy(isAuthLoading = true) }
             when (val result = repository.login(AuthLoginRequest(email, password))) {
                 is PosResult.Success -> _state.update {
-                    it.copy(authStatus = "Authenticated", isAuthLoading = false)
+                    it.copy(isAuthenticated = true, authStatus = "Berhasil masuk", isAuthLoading = false)
                 }
                 is PosResult.Failure -> _state.update {
                     it.copy(authStatus = result.error.toStatusMessage(), isAuthLoading = false)
@@ -49,8 +55,11 @@ class PosShellViewModel(
                 tenantId = tenantId?.ifBlank { null },
             )
             when (val result = repository.register(request)) {
-                is PosResult.Success -> _state.update {
-                    it.copy(authStatus = "Registered", isAuthLoading = false)
+                is PosResult.Success -> {
+                    result.value?.let { token -> sessionPreferences?.saveAccessToken(token) }
+                    _state.update {
+                        it.copy(isAuthenticated = true, authStatus = "Akun berhasil dibuat", isAuthLoading = false)
+                    }
                 }
                 is PosResult.Failure -> _state.update {
                     it.copy(authStatus = result.error.toStatusMessage(), isAuthLoading = false)
@@ -64,7 +73,12 @@ class PosShellViewModel(
             _state.update { it.copy(isStoreLoading = true) }
             when (val result = repository.registerStore(request)) {
                 is PosResult.Success -> _state.update {
-                    it.copy(storeStatus = "Store registered: ${result.value}", isStoreLoading = false)
+                    it.copy(
+                        hasActiveStore = true,
+                        activeStoreId = result.value,
+                        storeStatus = "Toko siap digunakan",
+                        isStoreLoading = false,
+                    )
                 }
                 is PosResult.Failure -> _state.update {
                     it.copy(storeStatus = result.error.toStatusMessage(), isStoreLoading = false)
@@ -78,7 +92,7 @@ class PosShellViewModel(
             _state.update { it.copy(isCatalogLoading = true) }
             when (val result = repository.listProducts(storeId)) {
                 is PosResult.Success -> _state.update {
-                    it.copy(catalogStatus = result.value.ifBlank { "Catalog empty" }, isCatalogLoading = false)
+                    it.copy(catalogStatus = if (result.value.isBlank()) "Belum ada produk" else "Produk berhasil dimuat", isCatalogLoading = false)
                 }
                 is PosResult.Failure -> _state.update {
                     it.copy(catalogStatus = result.error.toStatusMessage(), isCatalogLoading = false)
@@ -92,7 +106,7 @@ class PosShellViewModel(
             _state.update { it.copy(isCheckoutLoading = true) }
             when (val result = repository.createTransaction(storeId, request)) {
                 is PosResult.Success -> _state.update {
-                    it.copy(checkoutStatus = "Checkout complete: ${result.value}", isCheckoutLoading = false)
+                    it.copy(checkoutStatus = "Transaksi berhasil disimpan", isCheckoutLoading = false)
                 }
                 is PosResult.Failure -> _state.update {
                     it.copy(checkoutStatus = result.error.toStatusMessage(), isCheckoutLoading = false)
@@ -106,7 +120,7 @@ class PosShellViewModel(
             _state.update { it.copy(isSyncLoading = true) }
             when (val result = repository.sync(storeId, request)) {
                 is PosResult.Success -> _state.update {
-                    it.copy(syncStatus = "Synced: ${result.value}", isSyncLoading = false)
+                    it.copy(syncStatus = "Data toko sudah sinkron", isSyncLoading = false)
                 }
                 is PosResult.Failure -> _state.update {
                     it.copy(syncStatus = result.error.toStatusMessage(), isSyncLoading = false)
@@ -120,11 +134,40 @@ class PosShellViewModel(
             _state.update { it.copy(isAdminLoading = true) }
             when (val result = repository.adminStats()) {
                 is PosResult.Success -> _state.update {
-                    it.copy(adminStatus = result.value, isAdminLoading = false)
+                    it.copy(adminStatus = if (result.value.isBlank()) "Belum ada data admin" else "Ringkasan admin siap", isAdminLoading = false)
                 }
                 is PosResult.Failure -> _state.update {
                     it.copy(adminStatus = result.error.toStatusMessage(), isAdminLoading = false)
                 }
+            }
+        }
+    }
+
+    fun logout() {
+        launchShellUpdate {
+            sessionPreferences?.clearSession()
+            _state.update { PosShellState(isSessionLoaded = true, authStatus = "Anda sudah keluar") }
+        }
+    }
+
+    private fun hydrateSession() {
+        val preferences = sessionPreferences
+        if (preferences == null) {
+            _state.update { it.copy(isSessionLoaded = true) }
+            return
+        }
+        launchShellUpdate {
+            val accessToken = preferences.getAccessToken()
+            val activeStoreId = preferences.getActiveStoreId()
+            _state.update {
+                it.copy(
+                    isSessionLoaded = true,
+                    isAuthenticated = !accessToken.isNullOrBlank(),
+                    hasActiveStore = !activeStoreId.isNullOrBlank(),
+                    activeStoreId = activeStoreId,
+                    authStatus = if (accessToken.isNullOrBlank()) "Belum masuk" else "Sesi aktif",
+                    storeStatus = if (activeStoreId.isNullOrBlank()) "Belum ada toko aktif" else "Toko aktif",
+                )
             }
         }
     }
@@ -135,7 +178,7 @@ class PosShellViewModel(
 }
 
 private fun PosError.toStatusMessage(): String = when (this) {
-    PosError.Unauthorized -> "Unauthorized"
+    PosError.Unauthorized -> "Email atau password belum sesuai"
     is PosError.MissingData -> message
     is PosError.Network -> message
 }
