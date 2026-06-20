@@ -1,9 +1,5 @@
 package com.fajar.kmp.core.network
 
-import com.fajar.kmp.core.network.data.AuthLoginRequest
-import com.fajar.kmp.core.network.data.AuthLoginResponse
-import com.fajar.kmp.core.network.data.PosApiJson
-import com.fajar.kmp.core.network.data.PosApiPaths
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
 import io.ktor.client.engine.mock.respondError
@@ -13,7 +9,6 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.http.content.TextContent
 import kotlinx.coroutines.test.runTest
 import kotlin.coroutines.cancellation.CancellationException
-import kotlinx.serialization.json.Json
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -21,13 +16,11 @@ import kotlin.test.assertTrue
 import kotlin.test.fail
 
 class KtorApiClientTest {
-    private val requestJson = Json { encodeDefaults = true }
-
     @Test
-    fun login_success_returns_response_body_for_parsing() = runTest {
+    fun post_success_returns_response_body_for_parsing() = runTest {
         val client = testClient(
             engine = MockEngine { request ->
-                assertEquals(PosApiPaths.authLogin, request.url.encodedPath)
+                assertEquals("/login", request.url.encodedPath)
                 assertEquals(io.ktor.http.HttpMethod.Post, request.method)
                 respond(
                     content = """{"success":true,"data":{"accessToken":"token-123"}}""",
@@ -38,19 +31,15 @@ class KtorApiClientTest {
 
         val result = client.execute(
             ApiRequest(
-                path = PosApiPaths.authLogin,
+                path = "/login",
                 method = HttpMethod.Post,
-                body = requestJson.encodeToString(
-                    AuthLoginRequest.serializer(),
-                    AuthLoginRequest("admin@posgg.dev", "adminpass123"),
-                ),
+                body = "{\"email\":\"admin@posgg.dev\",\"password\":\"adminpass123\"}",
             ),
         )
 
         val response = result.successValue()
-        val login = PosApiJson.tolerant.decodeFromString(AuthLoginResponse.serializer(), response.body)
         assertEquals(200, response.statusCode)
-        assertEquals("token-123", login.data?.accessToken)
+        assertEquals("""{"success":true,"data":{"accessToken":"token-123"}}""", response.body)
     }
 
     @Test
@@ -60,7 +49,7 @@ class KtorApiClientTest {
             engine = MockEngine { fail("MockEngine should not be reached while offline") },
         )
 
-        val result = client.execute(ApiRequest(PosApiPaths.authLogin, HttpMethod.Post))
+        val result = client.execute(ApiRequest("/login", HttpMethod.Post))
 
         assertEquals(NetworkResult.Failure(NetworkError.Offline), result)
     }
@@ -69,7 +58,7 @@ class KtorApiClientTest {
     fun unauthorized_status_maps_to_unauthorized() = runTest {
         val client = testClient(engine = MockEngine { respondError(HttpStatusCode.Unauthorized, "Unauthorized") })
 
-        val result = client.execute(ApiRequest(PosApiPaths.adminUsers, HttpMethod.Get))
+        val result = client.execute(ApiRequest("/admin/users", HttpMethod.Get))
 
         assertEquals(NetworkResult.Failure(NetworkError.Unauthorized), result)
     }
@@ -78,17 +67,14 @@ class KtorApiClientTest {
     fun server_error_status_maps_to_server_error() = runTest {
         val client = testClient(engine = MockEngine { respondError(HttpStatusCode.InternalServerError, "Server down") })
 
-        val result = client.execute(ApiRequest(PosApiPaths.adminStats, HttpMethod.Get))
+        val result = client.execute(ApiRequest("/admin/stats", HttpMethod.Get))
 
         assertEquals(NetworkResult.Failure(NetworkError.Server(500, "Server down")), result)
     }
 
     @Test
     fun json_body_is_sent_with_application_json_content_type() = runTest {
-        val body = requestJson.encodeToString(
-            AuthLoginRequest.serializer(),
-            AuthLoginRequest("admin@posgg.dev", "adminpass123"),
-        )
+        val body = "{\"email\":\"admin@posgg.dev\",\"password\":\"adminpass123\"}"
         val client = testClient(
             engine = MockEngine { request ->
                 val content = request.body as TextContent
@@ -98,7 +84,7 @@ class KtorApiClientTest {
             },
         )
 
-        client.execute(ApiRequest(PosApiPaths.authLogin, HttpMethod.Post, body = body)).successValue()
+        client.execute(ApiRequest("/login", HttpMethod.Post, body = body)).successValue()
     }
 
     @Test
@@ -111,7 +97,7 @@ class KtorApiClientTest {
             },
         )
 
-        client.execute(ApiRequest(PosApiPaths.adminUsers, HttpMethod.Get)).successValue()
+        client.execute(ApiRequest("/admin/users", HttpMethod.Get)).successValue()
     }
 
     @Test
@@ -133,7 +119,7 @@ class KtorApiClientTest {
         )
 
         assertFailsWith<CancellationException> {
-            client.execute(ApiRequest(PosApiPaths.adminUsers, HttpMethod.Get))
+            client.execute(ApiRequest("/admin/users", HttpMethod.Get))
         }
     }
 

@@ -3,7 +3,11 @@ package com.fajar.kmp.core.network
 sealed interface NetworkError {
     data object Offline : NetworkError
     data object Unauthorized : NetworkError
+    data object Forbidden : NetworkError
+    data object NotFound : NetworkError
+    data class BadRequest(val message: String) : NetworkError
     data class Server(val code: Int, val message: String) : NetworkError
+    data class Serialization(val message: String) : NetworkError
     data class Unknown(val message: String) : NetworkError
 }
 
@@ -38,7 +42,10 @@ sealed interface NetworkResult<out T> {
 
 class NetworkErrorMapper {
     fun mapStatus(code: Int, message: String): NetworkError = when (code) {
+        400 -> NetworkError.BadRequest(message)
         401 -> NetworkError.Unauthorized
+        403 -> NetworkError.Forbidden
+        404 -> NetworkError.NotFound
         in 500..599 -> NetworkError.Server(code, message)
         else -> NetworkError.Unknown(message)
     }

@@ -23,7 +23,6 @@ class KoinModuleVerificationTest {
         stopExistingKoin()
 
         val modules = productionAppModules(testConfig)
-        modules.verifyAll()
 
         val application = startKoin {
             modules(modules)

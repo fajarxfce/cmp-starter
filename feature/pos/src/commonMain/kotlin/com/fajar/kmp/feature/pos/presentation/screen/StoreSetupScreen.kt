@@ -58,7 +58,7 @@ import com.fajar.kmp.core.designsystem.PosStatusPill
 import com.fajar.kmp.core.designsystem.PosTextField
 import com.fajar.kmp.core.navigation.AppRoute
 import com.fajar.kmp.core.navigation.displayTitle
-import com.fajar.kmp.core.network.data.StoreRegisterRequest
+import com.fajar.kmp.feature.pos.data.api.StoreRegisterRequest
 
 @Composable
 fun StoreSetupScreen(storeStatus: String,

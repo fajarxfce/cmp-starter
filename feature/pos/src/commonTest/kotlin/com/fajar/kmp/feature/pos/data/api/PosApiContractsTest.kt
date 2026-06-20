@@ -1,4 +1,4 @@
-package com.fajar.kmp.core.network.data
+package com.fajar.kmp.feature.pos.data.api
 
 import kotlinx.serialization.json.Json
 import kotlin.test.Test
@@ -12,20 +12,6 @@ class PosApiContractsTest {
     }
 
     private val tolerantJson = PosApiJson.tolerant
-
-    @Test
-    fun endpoint_paths_are_exact() {
-        assertEquals("/api/v1/auth/register", PosApiPaths.authRegister)
-        assertEquals("/api/v1/auth/login", PosApiPaths.authLogin)
-        assertEquals("/api/v1/stores/register", PosApiPaths.storeRegister)
-        assertEquals("/api/v1/stores/store-123/categories", PosApiPaths.storeCategories("store-123"))
-        assertEquals("/api/v1/stores/store-123/products", PosApiPaths.storeProducts("store-123"))
-        assertEquals("/api/v1/stores/store-123/transactions", PosApiPaths.storeTransactions("store-123"))
-        assertEquals("/api/v1/stores/store-123/sync", PosApiPaths.storeSync("store-123"))
-        assertEquals("/api/v1/admin/stats", PosApiPaths.adminStats)
-        assertEquals("/api/v1/admin/stores", PosApiPaths.adminStores)
-        assertEquals("/api/v1/admin/users", PosApiPaths.adminUsers)
-    }
 
     @Test
     fun request_dtos_serialize_to_postman_bodies() {

@@ -1,12 +1,12 @@
 package com.fajar.kmp.feature.pos.domain.usecase
 
-import com.fajar.kmp.core.network.data.AuthLoginRequest
-import com.fajar.kmp.core.network.data.AuthRegisterRequest
-import com.fajar.kmp.core.network.data.CategoryCreateRequest
-import com.fajar.kmp.core.network.data.ProductCreateRequest
-import com.fajar.kmp.core.network.data.StoreRegisterRequest
-import com.fajar.kmp.core.network.data.SyncRequest
-import com.fajar.kmp.core.network.data.TransactionCreateRequest
+import com.fajar.kmp.feature.pos.data.api.AuthLoginRequest
+import com.fajar.kmp.feature.pos.data.api.AuthRegisterRequest
+import com.fajar.kmp.feature.pos.data.api.CategoryCreateRequest
+import com.fajar.kmp.feature.pos.data.api.ProductCreateRequest
+import com.fajar.kmp.feature.pos.data.api.StoreRegisterRequest
+import com.fajar.kmp.feature.pos.data.api.SyncRequest
+import com.fajar.kmp.feature.pos.data.api.TransactionCreateRequest
 import com.fajar.kmp.feature.pos.domain.repository.PosRepository
 
 class PosLoginUseCase(private val repository: PosRepository) {

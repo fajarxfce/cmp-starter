@@ -2,15 +2,14 @@ package com.fajar.kmp.feature.pos.presentation.shell
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fajar.kmp.core.common.result.Try
 import com.fajar.kmp.core.datastore.SessionPreferences
-import com.fajar.kmp.core.network.data.AuthLoginRequest
-import com.fajar.kmp.core.network.data.AuthRegisterRequest
-import com.fajar.kmp.core.network.data.StoreRegisterRequest
-import com.fajar.kmp.core.network.data.SyncRequest
-import com.fajar.kmp.core.network.data.TransactionCreateRequest
-import com.fajar.kmp.feature.pos.domain.repository.PosError
+import com.fajar.kmp.feature.pos.data.api.AuthLoginRequest
+import com.fajar.kmp.feature.pos.data.api.AuthRegisterRequest
+import com.fajar.kmp.feature.pos.data.api.StoreRegisterRequest
+import com.fajar.kmp.feature.pos.data.api.SyncRequest
+import com.fajar.kmp.feature.pos.data.api.TransactionCreateRequest
 import com.fajar.kmp.feature.pos.domain.repository.PosRepository
-import com.fajar.kmp.feature.pos.domain.repository.PosResult
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -34,11 +33,11 @@ class PosShellViewModel(
         launchShellUpdate {
             _state.update { it.copy(isAuthLoading = true) }
             when (val result = repository.login(AuthLoginRequest(email, password))) {
-                is PosResult.Success -> _state.update {
+                is Try.Success -> _state.update {
                     it.copy(isAuthenticated = true, authStatus = "Berhasil masuk", isAuthLoading = false)
                 }
-                is PosResult.Failure -> _state.update {
-                    it.copy(authStatus = result.error.toStatusMessage(), isAuthLoading = false)
+                is Try.Error -> _state.update {
+                    it.copy(authStatus = result.result.toStatusMessage(), isAuthLoading = false)
                 }
             }
         }
@@ -55,14 +54,13 @@ class PosShellViewModel(
                 tenantId = tenantId?.ifBlank { null },
             )
             when (val result = repository.register(request)) {
-                is PosResult.Success -> {
-                    result.value?.let { token -> sessionPreferences?.saveAccessToken(token) }
+                is Try.Success -> {
                     _state.update {
                         it.copy(isAuthenticated = true, authStatus = "Akun berhasil dibuat", isAuthLoading = false)
                     }
                 }
-                is PosResult.Failure -> _state.update {
-                    it.copy(authStatus = result.error.toStatusMessage(), isAuthLoading = false)
+                is Try.Error -> _state.update {
+                    it.copy(authStatus = result.result.toStatusMessage(), isAuthLoading = false)
                 }
             }
         }
@@ -72,16 +70,16 @@ class PosShellViewModel(
         launchShellUpdate {
             _state.update { it.copy(isStoreLoading = true) }
             when (val result = repository.registerStore(request)) {
-                is PosResult.Success -> _state.update {
+                is Try.Success -> _state.update {
                     it.copy(
                         hasActiveStore = true,
-                        activeStoreId = result.value,
+                        activeStoreId = result.result,
                         storeStatus = "Toko siap digunakan",
                         isStoreLoading = false,
                     )
                 }
-                is PosResult.Failure -> _state.update {
-                    it.copy(storeStatus = result.error.toStatusMessage(), isStoreLoading = false)
+                is Try.Error -> _state.update {
+                    it.copy(storeStatus = result.result.toStatusMessage(), isStoreLoading = false)
                 }
             }
         }
@@ -91,11 +89,11 @@ class PosShellViewModel(
         launchShellUpdate {
             _state.update { it.copy(isCatalogLoading = true) }
             when (val result = repository.listProducts(storeId)) {
-                is PosResult.Success -> _state.update {
-                    it.copy(catalogStatus = if (result.value.isBlank()) "Belum ada produk" else "Produk berhasil dimuat", isCatalogLoading = false)
+                is Try.Success -> _state.update {
+                    it.copy(catalogStatus = if (result.result.isBlank()) "Belum ada produk" else "Produk berhasil dimuat", isCatalogLoading = false)
                 }
-                is PosResult.Failure -> _state.update {
-                    it.copy(catalogStatus = result.error.toStatusMessage(), isCatalogLoading = false)
+                is Try.Error -> _state.update {
+                    it.copy(catalogStatus = result.result.toStatusMessage(), isCatalogLoading = false)
                 }
             }
         }
@@ -105,11 +103,11 @@ class PosShellViewModel(
         launchShellUpdate {
             _state.update { it.copy(isCheckoutLoading = true) }
             when (val result = repository.createTransaction(storeId, request)) {
-                is PosResult.Success -> _state.update {
+                is Try.Success -> _state.update {
                     it.copy(checkoutStatus = "Transaksi berhasil disimpan", isCheckoutLoading = false)
                 }
-                is PosResult.Failure -> _state.update {
-                    it.copy(checkoutStatus = result.error.toStatusMessage(), isCheckoutLoading = false)
+                is Try.Error -> _state.update {
+                    it.copy(checkoutStatus = result.result.toStatusMessage(), isCheckoutLoading = false)
                 }
             }
         }
@@ -119,11 +117,11 @@ class PosShellViewModel(
         launchShellUpdate {
             _state.update { it.copy(isSyncLoading = true) }
             when (val result = repository.sync(storeId, request)) {
-                is PosResult.Success -> _state.update {
+                is Try.Success -> _state.update {
                     it.copy(syncStatus = "Data toko sudah sinkron", isSyncLoading = false)
                 }
-                is PosResult.Failure -> _state.update {
-                    it.copy(syncStatus = result.error.toStatusMessage(), isSyncLoading = false)
+                is Try.Error -> _state.update {
+                    it.copy(syncStatus = result.result.toStatusMessage(), isSyncLoading = false)
                 }
             }
         }
@@ -133,11 +131,11 @@ class PosShellViewModel(
         launchShellUpdate {
             _state.update { it.copy(isAdminLoading = true) }
             when (val result = repository.adminStats()) {
-                is PosResult.Success -> _state.update {
-                    it.copy(adminStatus = if (result.value.isBlank()) "Belum ada data admin" else "Ringkasan admin siap", isAdminLoading = false)
+                is Try.Success -> _state.update {
+                    it.copy(adminStatus = if (result.result.isBlank()) "Belum ada data admin" else "Ringkasan admin siap", isAdminLoading = false)
                 }
-                is PosResult.Failure -> _state.update {
-                    it.copy(adminStatus = result.error.toStatusMessage(), isAdminLoading = false)
+                is Try.Error -> _state.update {
+                    it.copy(adminStatus = result.result.toStatusMessage(), isAdminLoading = false)
                 }
             }
         }
@@ -177,8 +175,4 @@ class PosShellViewModel(
     }
 }
 
-private fun PosError.toStatusMessage(): String = when (this) {
-    PosError.Unauthorized -> "Email atau password belum sesuai"
-    is PosError.MissingData -> message
-    is PosError.Network -> message
-}
+private fun Throwable.toStatusMessage(): String = message ?: "Terjadi kesalahan jaringan"

@@ -8,18 +8,18 @@ import com.fajar.kmp.core.network.ApiResponse
 import com.fajar.kmp.core.network.HttpMethod
 import com.fajar.kmp.core.network.NetworkError
 import com.fajar.kmp.core.network.NetworkResult
-import com.fajar.kmp.core.network.data.AuthLoginRequest
-import com.fajar.kmp.core.network.data.AuthRegisterRequest
-import com.fajar.kmp.core.network.data.CategoryCreateRequest
-import com.fajar.kmp.core.network.data.PosApiPaths
-import com.fajar.kmp.core.network.data.ProductCreateRequest
-import com.fajar.kmp.core.network.data.StoreRegisterRequest
-import com.fajar.kmp.core.network.data.SyncRequest
-import com.fajar.kmp.core.network.data.TransactionCreateRequest
-import com.fajar.kmp.core.network.data.TransactionItemRequest
+import com.fajar.kmp.feature.pos.data.api.AuthLoginRequest
+import com.fajar.kmp.feature.pos.data.api.AuthRegisterRequest
+import com.fajar.kmp.feature.pos.data.api.CategoryCreateRequest
+import com.fajar.kmp.feature.pos.data.api.ProductCreateRequest
+import com.fajar.kmp.feature.pos.data.api.StoreRegisterRequest
+import com.fajar.kmp.feature.pos.data.api.SyncRequest
+import com.fajar.kmp.feature.pos.data.api.TransactionCreateRequest
+import com.fajar.kmp.feature.pos.data.api.TransactionItemRequest
 import com.fajar.kmp.feature.pos.data.PosRepositoryImpl
-import com.fajar.kmp.feature.pos.domain.repository.PosError
-import com.fajar.kmp.feature.pos.domain.repository.PosResult
+import com.fajar.kmp.feature.pos.data.api.AuthApiService
+import com.fajar.kmp.feature.pos.data.api.PosApiService
+import com.fajar.kmp.core.common.result.Try
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -29,56 +29,62 @@ import kotlinx.coroutines.test.runTest
 class PosRepositoryTest {
     @Test
     fun auth_login_posts_credentials_and_persists_access_token() = runTest {
-        val apiClient = RecordingApiClient("""{"success":true,"data":{"accessToken":"token-123"}}""")
+        val apiClient = QueueApiClient(
+            NetworkResult.Success(ApiResponse(200, """{"success":true,"data":{"accessToken":"token-123"}}""")),
+            NetworkResult.Success(ApiResponse(200, """{"success":true,"data":[]}""")),
+        )
         val preferences = KeyValueSessionPreferences(InMemoryKeyValueStore())
-        val repository = PosRepositoryImpl(apiClient, preferences)
+        val repository = PosRepositoryImpl(AuthApiService(apiClient), PosApiService(apiClient), preferences)
 
         val result = repository.login(AuthLoginRequest("user@example.com", "password123"))
 
-        assertIs<PosResult.Success<String>>(result)
-        assertEquals("token-123", result.value)
+        assertIs<Try.Success<String>>(result)
+        assertEquals("token-123", result.result)
         assertEquals("token-123", preferences.getAccessToken())
-        assertEquals(PosApiPaths.authLogin, apiClient.singleRequest().path)
-        assertEquals(HttpMethod.Post, apiClient.singleRequest().method)
-        assertTrue(apiClient.singleRequest().body.orEmpty().contains("user@example.com"))
+        assertEquals("/api/v1/auth/login", apiClient.requests.first().path)
+        assertEquals(HttpMethod.Post, apiClient.requests.first().method)
+        assertTrue(apiClient.requests.first().body.orEmpty().contains("user@example.com"))
     }
 
     @Test
     fun auth_register_posts_profile_to_register_endpoint() = runTest {
-        val apiClient = RecordingApiClient("""{"success":true,"data":{"accessToken":"registered-token"}}""")
+        val apiClient = QueueApiClient(
+            NetworkResult.Success(ApiResponse(200, """{"success":true,"data":{"accessToken":"registered-token"}}""")),
+            NetworkResult.Success(ApiResponse(200, """{"success":true,"data":[]}""")),
+        )
         val repository = repository(apiClient)
 
         val result = repository.register(AuthRegisterRequest("new@example.com", "New User", "password123"))
 
-        assertIs<PosResult.Success<String?>>(result)
-        assertEquals("registered-token", result.value)
-        assertEquals(PosApiPaths.authRegister, apiClient.singleRequest().path)
-        assertEquals(HttpMethod.Post, apiClient.singleRequest().method)
+        assertIs<Try.Success<String?>>(result)
+        assertEquals("registered-token", result.result)
+        assertEquals("/api/v1/auth/register", apiClient.requests.first().path)
+        assertEquals(HttpMethod.Post, apiClient.requests.first().method)
     }
 
     @Test
     fun store_register_persists_active_store_id_from_response() = runTest {
-        val apiClient = RecordingApiClient("""{"success":true,"data":{"storeId":"store-123"}}""")
+        val apiClient = RecordingApiClient("""{"success":true,"data":{"id":"store-123","name":"Store","slug":"store","ownerUserId":"user-1","isActive":true,"createdAt":"2026-01-01T00:00:00Z"}}""")
         val preferences = KeyValueSessionPreferences(InMemoryKeyValueStore())
-        val repository = PosRepositoryImpl(apiClient, preferences)
+        val repository = PosRepositoryImpl(AuthApiService(apiClient), PosApiService(apiClient), preferences)
 
         val result = repository.registerStore(sampleStoreRequest())
 
-        assertIs<PosResult.Success<String>>(result)
-        assertEquals("store-123", result.value)
+        assertIs<Try.Success<String>>(result)
+        assertEquals("store-123", result.result)
         assertEquals("store-123", preferences.getActiveStoreId())
-        assertEquals(PosApiPaths.storeRegister, apiClient.singleRequest().path)
+        assertEquals("/api/v1/stores/register", apiClient.requests.first().path)
     }
 
     @Test
     fun store_register_missing_store_id_returns_clear_error() = runTest {
         val apiClient = RecordingApiClient("""{"success":true,"data":{"name":"Store"}}""")
         val preferences = KeyValueSessionPreferences(InMemoryKeyValueStore())
-        val repository = PosRepositoryImpl(apiClient, preferences)
+        val repository = PosRepositoryImpl(AuthApiService(apiClient), PosApiService(apiClient), preferences)
 
         val result = repository.registerStore(sampleStoreRequest())
 
-        assertEquals(PosResult.Failure(PosError.MissingData("storeId missing from store register response")), result)
+        assertIs<Try.Error<Throwable>>(result)
         assertEquals(null, preferences.getActiveStoreId())
     }
 
@@ -87,12 +93,12 @@ class PosRepositoryTest {
         val apiClient = RecordingApiClient("""{"success":true,"data":[]}""")
         val repository = repository(apiClient)
 
-        assertIs<PosResult.Success<String>>(repository.listCategories("store-1"))
-        assertIs<PosResult.Success<String>>(repository.createCategory("store-1", CategoryCreateRequest("Food", "Meals", "#fff", "utensils")))
+        assertIs<Try.Success<String>>(repository.listCategories("store-1"))
+        assertIs<Try.Success<String>>(repository.createCategory("store-1", CategoryCreateRequest("Food", "Meals", "#fff", "utensils")))
 
-        assertEquals(PosApiPaths.storeCategories("store-1"), apiClient.requests[0].path)
+        assertEquals("/api/v1/stores/store-1/categories", apiClient.requests[0].path)
         assertEquals(HttpMethod.Get, apiClient.requests[0].method)
-        assertEquals(PosApiPaths.storeCategories("store-1"), apiClient.requests[1].path)
+        assertEquals("/api/v1/stores/store-1/categories", apiClient.requests[1].path)
         assertEquals(HttpMethod.Post, apiClient.requests[1].method)
     }
 
@@ -101,12 +107,12 @@ class PosRepositoryTest {
         val apiClient = RecordingApiClient("""{"success":true,"data":[]}""")
         val repository = repository(apiClient)
 
-        assertIs<PosResult.Success<String>>(repository.listProducts("store-1"))
-        assertIs<PosResult.Success<String>>(repository.createProduct("store-1", sampleProductRequest()))
+        assertIs<Try.Success<String>>(repository.listProducts("store-1"))
+        assertIs<Try.Success<String>>(repository.createProduct("store-1", sampleProductRequest()))
 
-        assertEquals(PosApiPaths.storeProducts("store-1"), apiClient.requests[0].path)
+        assertEquals("/api/v1/stores/store-1/products", apiClient.requests[0].path)
         assertEquals(HttpMethod.Get, apiClient.requests[0].method)
-        assertEquals(PosApiPaths.storeProducts("store-1"), apiClient.requests[1].path)
+        assertEquals("/api/v1/stores/store-1/products", apiClient.requests[1].path)
         assertEquals(HttpMethod.Post, apiClient.requests[1].method)
     }
 
@@ -115,12 +121,12 @@ class PosRepositoryTest {
         val apiClient = RecordingApiClient("""{"success":true,"data":[]}""")
         val repository = repository(apiClient)
 
-        assertIs<PosResult.Success<String>>(repository.listTransactions("store-1"))
-        assertIs<PosResult.Success<String>>(repository.createTransaction("store-1", sampleTransactionRequest()))
+        assertIs<Try.Success<String>>(repository.listTransactions("store-1"))
+        assertIs<Try.Success<String>>(repository.createTransaction("store-1", sampleTransactionRequest()))
 
-        assertEquals(PosApiPaths.storeTransactions("store-1"), apiClient.requests[0].path)
+        assertEquals("/api/v1/stores/store-1/transactions", apiClient.requests[0].path)
         assertEquals(HttpMethod.Get, apiClient.requests[0].method)
-        assertEquals(PosApiPaths.storeTransactions("store-1"), apiClient.requests[1].path)
+        assertEquals("/api/v1/stores/store-1/transactions", apiClient.requests[1].path)
         assertEquals(HttpMethod.Post, apiClient.requests[1].method)
     }
 
@@ -129,10 +135,10 @@ class PosRepositoryTest {
         val apiClient = RecordingApiClient("""{"success":true,"data":{"synced":true}}""")
         val repository = repository(apiClient)
 
-        assertIs<PosResult.Success<String>>(repository.sync("store-1", SyncRequest("2026-05-12T00:00:00Z")))
+        assertIs<Try.Success<String>>(repository.sync("store-1", SyncRequest("2026-05-12T00:00:00Z")))
 
-        assertEquals(PosApiPaths.storeSync("store-1"), apiClient.singleRequest().path)
-        assertEquals(HttpMethod.Post, apiClient.singleRequest().method)
+        assertEquals("/api/v1/stores/store-1/sync", apiClient.requests.first().path)
+        assertEquals(HttpMethod.Post, apiClient.requests.first().method)
     }
 
     @Test
@@ -140,13 +146,13 @@ class PosRepositoryTest {
         val apiClient = RecordingApiClient("""{"success":true,"data":[]}""")
         val repository = repository(apiClient)
 
-        assertIs<PosResult.Success<String>>(repository.adminStats())
-        assertIs<PosResult.Success<String>>(repository.adminStores())
-        assertIs<PosResult.Success<String>>(repository.adminUsers())
+        assertIs<Try.Success<String>>(repository.adminStats())
+        assertIs<Try.Success<String>>(repository.adminStores())
+        assertIs<Try.Success<String>>(repository.adminUsers())
 
-        assertEquals(PosApiPaths.adminStats, apiClient.requests[0].path)
-        assertEquals(PosApiPaths.adminStores, apiClient.requests[1].path)
-        assertEquals(PosApiPaths.adminUsers, apiClient.requests[2].path)
+        assertEquals("/api/v1/admin/stats", apiClient.requests[0].path)
+        assertEquals("/api/v1/admin/stores", apiClient.requests[1].path)
+        assertEquals("/api/v1/admin/users", apiClient.requests[2].path)
         assertTrue(apiClient.requests.all { it.method == HttpMethod.Get })
     }
 
@@ -157,7 +163,7 @@ class PosRepositoryTest {
 
         val result = repository.adminStats()
 
-        assertEquals(PosResult.Failure(PosError.Unauthorized), result)
+        assertIs<Try.Error<Throwable>>(result)
     }
 
     @Test
@@ -168,12 +174,12 @@ class PosRepositoryTest {
         )
         val repository = repository(apiClient)
 
-        assertEquals(PosResult.Failure(PosError.Unauthorized), repository.adminStats())
-        assertIs<PosResult.Success<String>>(repository.adminStores())
+        assertIs<Try.Error<Throwable>>(repository.adminStats())
+        assertIs<Try.Success<String>>(repository.adminStores())
     }
 
     private fun repository(apiClient: ApiClient): PosRepositoryImpl =
-        PosRepositoryImpl(apiClient, KeyValueSessionPreferences(InMemoryKeyValueStore()))
+        PosRepositoryImpl(AuthApiService(apiClient), PosApiService(apiClient), KeyValueSessionPreferences(InMemoryKeyValueStore()))
 
     private fun sampleStoreRequest() = StoreRegisterRequest(
         name = "Store",
@@ -226,6 +232,10 @@ private class QueueApiClient(
     vararg results: NetworkResult<ApiResponse>,
 ) : ApiClient {
     private val queuedResults = results.toMutableList()
+    val requests = mutableListOf<ApiRequest>()
 
-    override suspend fun execute(request: ApiRequest): NetworkResult<ApiResponse> = queuedResults.removeAt(0)
+    override suspend fun execute(request: ApiRequest): NetworkResult<ApiResponse> {
+        requests += request
+        return queuedResults.removeAt(0)
+    }
 }

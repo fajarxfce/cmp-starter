@@ -1,6 +1,5 @@
 package com.fajar.kmp.core.network
 
-import com.fajar.kmp.core.network.data.PosApiJson
 import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
 import io.ktor.client.engine.HttpClientEngine
@@ -128,7 +127,7 @@ private fun buildHttpClient(engine: HttpClientEngine, requestTimeoutMillis: Long
 private fun HttpClientConfig<out HttpClientEngineConfig>.configureKtorClient(requestTimeoutMillis: Long) {
     expectSuccess = false
     install(ContentNegotiation) {
-        json(PosApiJson.tolerant)
+        json(NetworkJson.tolerant)
     }
     install(Logging) {
         level = LogLevel.HEADERS

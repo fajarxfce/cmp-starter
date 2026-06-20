@@ -12,9 +12,9 @@ import androidx.navigation3.ui.NavDisplay
 import com.fajar.kmp.core.designsystem.CmpTheme
 import com.fajar.kmp.core.navigation.AppNavigator
 import com.fajar.kmp.core.navigation.AppRoute
-import com.fajar.kmp.core.network.data.SyncRequest
-import com.fajar.kmp.core.network.data.TransactionCreateRequest
-import com.fajar.kmp.core.network.data.TransactionItemRequest
+import com.fajar.kmp.feature.pos.data.api.SyncRequest
+import com.fajar.kmp.feature.pos.data.api.TransactionCreateRequest
+import com.fajar.kmp.feature.pos.data.api.TransactionItemRequest
 import com.fajar.kmp.feature.auth.presentation.screen.AuthMode
 import com.fajar.kmp.feature.auth.presentation.screen.AuthScreen
 import com.fajar.kmp.feature.home.presentation.screen.HomeScreen

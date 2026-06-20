@@ -1,27 +1,11 @@
-package com.fajar.kmp.core.network.data
+package com.fajar.kmp.feature.pos.data.api
 
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
+import com.fajar.kmp.core.network.NetworkJson
 import kotlinx.serialization.json.JsonElement
 
-object PosApiPaths {
-    const val authRegister = "/api/v1/auth/register"
-    const val authLogin = "/api/v1/auth/login"
-    const val storeRegister = "/api/v1/stores/register"
-    const val adminStats = "/api/v1/admin/stats"
-    const val adminStores = "/api/v1/admin/stores"
-    const val adminUsers = "/api/v1/admin/users"
-
-    fun storeCategories(storeId: String): String = "/api/v1/stores/$storeId/categories"
-    fun storeProducts(storeId: String): String = "/api/v1/stores/$storeId/products"
-    fun storeTransactions(storeId: String): String = "/api/v1/stores/$storeId/transactions"
-    fun storeSync(storeId: String): String = "/api/v1/stores/$storeId/sync"
-}
-
 object PosApiJson {
-    val tolerant: Json = Json {
-        ignoreUnknownKeys = true
-    }
+    val tolerant = NetworkJson.tolerant
 }
 
 @Serializable
@@ -37,6 +21,16 @@ data class AuthRegisterRequest(
 data class AuthLoginRequest(
     val email: String,
     val password: String,
+)
+
+@Serializable
+data class StoreSummaryResponse(
+    val id: String? = null,
+    val name: String? = null,
+    val slug: String? = null,
+    val ownerUserId: String? = null,
+    val isActive: Boolean = false,
+    val createdAt: String? = null,
 )
 
 @Serializable

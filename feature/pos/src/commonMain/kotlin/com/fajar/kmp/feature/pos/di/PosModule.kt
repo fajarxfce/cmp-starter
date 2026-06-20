@@ -1,6 +1,9 @@
 package com.fajar.kmp.feature.pos.di
 
+import com.fajar.kmp.core.network.ApiClient
 import com.fajar.kmp.feature.pos.data.PosRepositoryImpl
+import com.fajar.kmp.feature.pos.data.api.AuthApiService
+import com.fajar.kmp.feature.pos.data.api.PosApiService
 import com.fajar.kmp.feature.pos.domain.repository.PosRepository
 import com.fajar.kmp.feature.pos.domain.usecase.AdminStatsUseCase
 import com.fajar.kmp.feature.pos.domain.usecase.AdminStoresUseCase
@@ -18,7 +21,9 @@ import com.fajar.kmp.feature.pos.domain.usecase.SyncStoreUseCase
 import org.koin.dsl.module
 
 val posModule = module {
-    single<PosRepository> { PosRepositoryImpl(get(), get()) }
+    single { AuthApiService(get<ApiClient>()) }
+    single { PosApiService(get<ApiClient>()) }
+    single<PosRepository> { PosRepositoryImpl(get(), get(), get()) }
     factory { PosLoginUseCase(get()) }
     factory { PosRegisterUseCase(get()) }
     factory { RegisterStoreUseCase(get()) }

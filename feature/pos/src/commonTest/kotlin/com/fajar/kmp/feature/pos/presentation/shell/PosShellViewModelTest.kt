@@ -1,15 +1,14 @@
 package com.fajar.kmp.feature.pos.presentation.shell
 
-import com.fajar.kmp.core.network.data.AuthLoginRequest
-import com.fajar.kmp.core.network.data.AuthRegisterRequest
-import com.fajar.kmp.core.network.data.CategoryCreateRequest
-import com.fajar.kmp.core.network.data.ProductCreateRequest
-import com.fajar.kmp.core.network.data.StoreRegisterRequest
-import com.fajar.kmp.core.network.data.SyncRequest
-import com.fajar.kmp.core.network.data.TransactionCreateRequest
-import com.fajar.kmp.feature.pos.domain.repository.PosError
+import com.fajar.kmp.feature.pos.data.api.AuthLoginRequest
+import com.fajar.kmp.feature.pos.data.api.AuthRegisterRequest
+import com.fajar.kmp.feature.pos.data.api.CategoryCreateRequest
+import com.fajar.kmp.feature.pos.data.api.ProductCreateRequest
+import com.fajar.kmp.feature.pos.data.api.StoreRegisterRequest
+import com.fajar.kmp.feature.pos.data.api.SyncRequest
+import com.fajar.kmp.feature.pos.data.api.TransactionCreateRequest
+import com.fajar.kmp.core.common.result.Try
 import com.fajar.kmp.feature.pos.domain.repository.PosRepository
-import com.fajar.kmp.feature.pos.domain.repository.PosResult
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -19,7 +18,7 @@ import kotlinx.coroutines.test.runTest
 class PosShellViewModelTest {
     @Test
     fun login_failure_updates_auth_status() = runTest {
-        val viewModel = PosShellViewModel(FakePosRepository(loginResult = PosResult.Failure(PosError.Unauthorized)), this)
+        val viewModel = PosShellViewModel(FakePosRepository(loginResult = Try.Error(Throwable("Email atau password belum sesuai"))), this)
 
         viewModel.login("user@example.com", "bad-password")
         advanceUntilIdle()
@@ -30,7 +29,7 @@ class PosShellViewModelTest {
 
     @Test
     fun register_failure_updates_auth_status() = runTest {
-        val viewModel = PosShellViewModel(FakePosRepository(registerResult = PosResult.Failure(PosError.Network("Register failed"))), this)
+        val viewModel = PosShellViewModel(FakePosRepository(registerResult = Try.Error(Throwable("Register failed"))), this)
 
         viewModel.register("user@example.com", "User", "password123", null, null)
         advanceUntilIdle()
@@ -41,7 +40,7 @@ class PosShellViewModelTest {
 
     @Test
     fun store_success_updates_store_status() = runTest {
-        val viewModel = PosShellViewModel(FakePosRepository(registerStoreResult = PosResult.Success("store-1")), this)
+        val viewModel = PosShellViewModel(FakePosRepository(registerStoreResult = Try.Success("store-1")), this)
 
         viewModel.registerStore(storeRequest())
         advanceUntilIdle()
@@ -53,7 +52,7 @@ class PosShellViewModelTest {
     @Test
     fun store_failure_updates_store_status() = runTest {
         val viewModel = PosShellViewModel(
-            FakePosRepository(registerStoreResult = PosResult.Failure(PosError.Network("Store register failed"))),
+            FakePosRepository(registerStoreResult = Try.Error(Throwable("Store register failed"))),
             this,
         )
 
@@ -66,14 +65,14 @@ class PosShellViewModelTest {
 
     @Test
     fun catalog_empty_and_error_update_catalog_status() = runTest {
-        val emptyViewModel = PosShellViewModel(FakePosRepository(listProductsResult = PosResult.Success("")), this)
+        val emptyViewModel = PosShellViewModel(FakePosRepository(listProductsResult = Try.Success("")), this)
         emptyViewModel.loadCatalog("store-1")
         advanceUntilIdle()
 
         assertEquals("Belum ada produk", emptyViewModel.state.value.catalogStatus)
 
         val errorViewModel = PosShellViewModel(
-            FakePosRepository(listProductsResult = PosResult.Failure(PosError.Network("Catalog offline"))),
+            FakePosRepository(listProductsResult = Try.Error(Throwable("Catalog offline"))),
             this,
         )
         errorViewModel.loadCatalog("store-1")
@@ -85,14 +84,14 @@ class PosShellViewModelTest {
 
     @Test
     fun checkout_success_and_failure_update_checkout_status() = runTest {
-        val successViewModel = PosShellViewModel(FakePosRepository(createTransactionResult = PosResult.Success("txn-1")), this)
+        val successViewModel = PosShellViewModel(FakePosRepository(createTransactionResult = Try.Success("txn-1")), this)
         successViewModel.checkout("store-1", transactionRequest())
         advanceUntilIdle()
 
         assertEquals("Transaksi berhasil disimpan", successViewModel.state.value.checkoutStatus)
 
         val failureViewModel = PosShellViewModel(
-            FakePosRepository(createTransactionResult = PosResult.Failure(PosError.MissingData("Cart is empty"))),
+            FakePosRepository(createTransactionResult = Try.Error(Throwable("Cart is empty"))),
             this,
         )
         failureViewModel.checkout("store-1", transactionRequest())
@@ -105,7 +104,7 @@ class PosShellViewModelTest {
     @Test
     fun sync_error_updates_sync_status() = runTest {
         val viewModel = PosShellViewModel(
-            FakePosRepository(syncResult = PosResult.Failure(PosError.Network("Sync failed"))),
+            FakePosRepository(syncResult = Try.Error(Throwable("Sync failed"))),
             this,
         )
 
@@ -118,7 +117,7 @@ class PosShellViewModelTest {
 
     @Test
     fun admin_unauthorized_updates_admin_status() = runTest {
-        val viewModel = PosShellViewModel(FakePosRepository(adminStatsResult = PosResult.Failure(PosError.Unauthorized)), this)
+        val viewModel = PosShellViewModel(FakePosRepository(adminStatsResult = Try.Error(Throwable("Email atau password belum sesuai"))), this)
 
         viewModel.loadAdmin()
         advanceUntilIdle()
@@ -129,27 +128,27 @@ class PosShellViewModelTest {
 }
 
 private class FakePosRepository(
-    private val loginResult: PosResult<String> = PosResult.Success("token"),
-    private val registerResult: PosResult<String?> = PosResult.Success("token"),
-    private val registerStoreResult: PosResult<String> = PosResult.Success("store"),
-    private val listProductsResult: PosResult<String> = PosResult.Success("products"),
-    private val createTransactionResult: PosResult<String> = PosResult.Success("transaction"),
-    private val syncResult: PosResult<String> = PosResult.Success("sync"),
-    private val adminStatsResult: PosResult<String> = PosResult.Success("admin"),
+    private val loginResult: Try<String, Throwable> = Try.Success("token"),
+    private val registerResult: Try<String?, Throwable> = Try.Success("token"),
+    private val registerStoreResult: Try<String, Throwable> = Try.Success("store"),
+    private val listProductsResult: Try<String, Throwable> = Try.Success("products"),
+    private val createTransactionResult: Try<String, Throwable> = Try.Success("transaction"),
+    private val syncResult: Try<String, Throwable> = Try.Success("sync"),
+    private val adminStatsResult: Try<String, Throwable> = Try.Success("admin"),
 ) : PosRepository {
-    override suspend fun login(request: AuthLoginRequest): PosResult<String> = loginResult
-    override suspend fun register(request: AuthRegisterRequest): PosResult<String?> = registerResult
-    override suspend fun registerStore(request: StoreRegisterRequest): PosResult<String> = registerStoreResult
-    override suspend fun listCategories(storeId: String): PosResult<String> = PosResult.Success("categories")
-    override suspend fun createCategory(storeId: String, request: CategoryCreateRequest): PosResult<String> = PosResult.Success("category")
-    override suspend fun listProducts(storeId: String): PosResult<String> = listProductsResult
-    override suspend fun createProduct(storeId: String, request: ProductCreateRequest): PosResult<String> = PosResult.Success("product")
-    override suspend fun listTransactions(storeId: String): PosResult<String> = PosResult.Success("transactions")
-    override suspend fun createTransaction(storeId: String, request: TransactionCreateRequest): PosResult<String> = createTransactionResult
-    override suspend fun sync(storeId: String, request: SyncRequest): PosResult<String> = syncResult
-    override suspend fun adminStats(): PosResult<String> = adminStatsResult
-    override suspend fun adminStores(): PosResult<String> = PosResult.Success("stores")
-    override suspend fun adminUsers(): PosResult<String> = PosResult.Success("users")
+    override suspend fun login(request: AuthLoginRequest): Try<String, Throwable> = loginResult
+    override suspend fun register(request: AuthRegisterRequest): Try<String?, Throwable> = registerResult
+    override suspend fun registerStore(request: StoreRegisterRequest): Try<String, Throwable> = registerStoreResult
+    override suspend fun listCategories(storeId: String): Try<String, Throwable> = Try.Success("categories")
+    override suspend fun createCategory(storeId: String, request: CategoryCreateRequest): Try<String, Throwable> = Try.Success("category")
+    override suspend fun listProducts(storeId: String): Try<String, Throwable> = listProductsResult
+    override suspend fun createProduct(storeId: String, request: ProductCreateRequest): Try<String, Throwable> = Try.Success("product")
+    override suspend fun listTransactions(storeId: String): Try<String, Throwable> = Try.Success("transactions")
+    override suspend fun createTransaction(storeId: String, request: TransactionCreateRequest): Try<String, Throwable> = createTransactionResult
+    override suspend fun sync(storeId: String, request: SyncRequest): Try<String, Throwable> = syncResult
+    override suspend fun adminStats(): Try<String, Throwable> = adminStatsResult
+    override suspend fun adminStores(): Try<String, Throwable> = Try.Success("stores")
+    override suspend fun adminUsers(): Try<String, Throwable> = Try.Success("users")
 }
 
 private fun storeRequest() = StoreRegisterRequest(
